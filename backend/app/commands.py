@@ -13,7 +13,7 @@ def seed_db():
 
     click.echo("Seeding database...")
     # Your SQLAlchemy objects are created and committed here
-    car1 = Car(make="Toyota", model="Camry", year=2021, something="Example")
+    car1 = Car(make="Toyota", model="Camry", year=2021, price=20000)
     db.session.add(car1)
     db.session.commit()
     click.echo("Database seeded successfully.")

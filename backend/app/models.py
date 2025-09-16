@@ -6,7 +6,7 @@ class Car(db.Model):
     make = db.Column(db.String(50), nullable=False)
     model = db.Column(db.String(50), nullable=False)
     year = db.Column(db.Integer, nullable=False)
-    something = db.Column(db.String(50), nullable=True)  # Example additional field
+    price = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
         return {
@@ -14,5 +14,5 @@ class Car(db.Model):
             'make': self.make,
             'model': self.model,
             'year': self.year,
-            'something': self.something
+            "price": self.price
         }
