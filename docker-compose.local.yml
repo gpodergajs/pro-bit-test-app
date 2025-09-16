@@ -1,0 +1,17 @@
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=cardb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    ports:
+      # This exposes the database port to your host machine (localhost)
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:

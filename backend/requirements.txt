@@ -1,0 +1,14 @@
+# /backend/requirements.txt
+
+Flask==3.0.3
+Flask-Migrate>=4.0.0  
+gunicorn==22.0.0
+SQLAlchemy==2.0.29
+Flask-SQLAlchemy==3.1.1
+PyMySQL==1.1.0
+pyodbc==5.1.0
+python-dotenv==1.0.1
+cryptography==42.0.7
+debugpy>=1.8.0 # For remote debugging in VS Code
+Faker==13.3.0
+factory_boy==3.2.1
