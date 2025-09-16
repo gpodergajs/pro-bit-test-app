@@ -2,18 +2,20 @@ import click
 from flask.cli import with_appcontext
 from . import db
 from .models import Car
+from .database.seed.car_factory import CarFactory
 
-@click.command(name='seed_db')
+@click.command(name="seed_db")
 @with_appcontext
 def seed_db():
-    """Seeds the database with initial data."""
+    """Seeds the database with fake Car data using Factory Boy."""
     if Car.query.first():
         click.echo("Database already seeded. Skipping.")
         return
 
-    click.echo("Seeding database...")
-    # Your SQLAlchemy objects are created and committed here
-    car1 = Car(make="Toyota", model="Camry", year=2021, price=20000)
-    db.session.add(car1)
+    click.echo("Seeding database with fake cars...")
+
+    # Generate 20 fake cars
+    CarFactory.create_batch(20)
+
     db.session.commit()
-    click.echo("Database seeded successfully.")
+    click.echo("Database seeded successfully with fake cars!")

@@ -46,6 +46,10 @@ case "$COMMAND" in
     echo "--> Stopping local development database container..."
     docker-compose -f docker-compose.local.yml down
     ;;
+  seed-db)
+    echo "--> Seeding the local development database..."
+    # TODO - add seed for local dev
+    ;;
   reset-db)
     echo "--> WARNING: STOPPING container and REMOVING database volume..."
     docker-compose -f docker-compose.local.yml down -v

@@ -10,3 +10,5 @@ pyodbc==5.1.0
 python-dotenv==1.0.1
 cryptography==42.0.7
 debugpy>=1.8.0 # For remote debugging in VS Code
+Faker==13.3.0
+factory_boy==3.2.1
