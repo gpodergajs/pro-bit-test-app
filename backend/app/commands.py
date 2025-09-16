@@ -1,8 +1,8 @@
 import click
 from flask.cli import with_appcontext
-from . import db
-from .models import Car
-from .database.seed.car_factory import CarFactory
+from app import db
+from app.models.car_model import Car
+from app.database.seed.car_factory import CarFactory
 
 @click.command(name="seed_db")
 @with_appcontext

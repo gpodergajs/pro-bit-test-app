@@ -2,8 +2,8 @@ import factory
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 import random
-
-from app.models import Car
+from app import db
+from app.models.car_model import Car
 
 
 fake = Faker()
@@ -11,7 +11,7 @@ fake = Faker()
 class CarFactory(SQLAlchemyModelFactory):
     class Meta:
         model = Car
-        ##sqlalchemy_session = Car.query.session  # the SQLAlchemy session object
+        sqlalchemy_session = db.session
         sqlalchemy_session_persistence = "flush"
 
     make = factory.Iterator(["Toyota", "Ford", "Tesla", "BMW", "Audi", "Mercedes"])
