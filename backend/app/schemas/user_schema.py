@@ -1,4 +1,3 @@
-# /backend/app/schemas/user_schemas.py
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow_sqlalchemy.fields import Nested
 
