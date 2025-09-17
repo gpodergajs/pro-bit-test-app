@@ -27,13 +27,13 @@ def create_app():
     app.register_blueprint(car_bp, url_prefix='/api/cars')
 
     # --- Import Commands and Create DB ---
-    
-    from app.commands import seed_db
-    app.cli.add_command(seed_db)
-
     with app.app_context():
-        # You need to import models here so create_all knows about them
-        from app.models.car_model import Car
+         # Lazy import to avoid circular dependency
+        from app.commands import seed_db
+        app.cli.add_command(seed_db)
+
+        # Import models here so create_all knows about them
+        from app.models.car import Car
         db.create_all()
 
     return app
