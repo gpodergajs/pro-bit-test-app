@@ -16,14 +16,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # --- Import and Register Blueprints ---
-
-    # Import the blueprint object from your routes file
     from .routes.car_route import car_bp
-    
-    # Register the blueprint with the app and set a URL prefix.
-    # All routes in car_bp will now be prefixed with /api.
-    # So, '/cars' becomes '/api/cars'.
+
     app.register_blueprint(car_bp, url_prefix='/api/cars')
 
     # --- Import Commands and Create DB ---
@@ -31,9 +25,6 @@ def create_app():
          # Lazy import to avoid circular dependency
         from app.commands import seed_db
         app.cli.add_command(seed_db)
-
-        # Import models here so create_all knows about them
-        from app.models.car import Car
         db.create_all()
 
     return app
