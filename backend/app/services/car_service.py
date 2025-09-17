@@ -1,5 +1,5 @@
 from app import db
-from app.models.car_model import Car
+from app.models.car import Car
 
 # Create a car
 def create_car(make, model, year, price):
