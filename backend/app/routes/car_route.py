@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app.services.car_service import (
     create_car,
     get_all_cars,
@@ -8,6 +9,7 @@ from app.services.car_service import (
 )
 from app.schemas.car_schema import CarSchema
 from app.schemas.user_schema import UserSchema
+from app.decorators import role_required
 
 car_bp = Blueprint("car", __name__)
 car_schema = CarSchema()
@@ -42,6 +44,7 @@ def get_car(car_id):
 
 # Create car
 @car_bp.route("/", methods=["POST"])
+@jwt_required()
 def add_car():
     data = request.get_json()
     car = create_car(data["make"], data["model"], data["year"], data["price"])
@@ -58,6 +61,8 @@ def edit_car(car_id):
 
 # Delete car
 @car_bp.route("/<int:car_id>", methods=["DELETE"])
+@jwt_required()
+@role_required("admin")
 def remove_car(car_id):
     success = delete_car(car_id)
     if not success:

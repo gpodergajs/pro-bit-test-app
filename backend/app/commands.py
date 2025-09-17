@@ -16,9 +16,13 @@ def seed_db():
     click.echo("Seeding lookup tables...")
     # Seed lookup tables if they are empty
     click.echo("Seeding database lookup tables...")
+    user_type_objs = {}
     for ut in ["user", "admin"]:
-        if not UserType.query.filter_by(name=ut).first():
-            db.session.add(UserType(name=ut))
+        obj = UserType.query.filter_by(name=ut).first()
+        if not obj:
+            obj = UserType(name=ut)
+            db.session.add(obj)
+        user_type_objs[ut] = obj
 
     for btype in ["SUV", "Sedan", "Hatchback"]:
         if not BodyType.query.filter_by(type=btype).first():
@@ -38,6 +42,11 @@ def seed_db():
     
     # commit so that factories can use these entries
     db.session.commit()    
+    
+    click.echo("Seeding admin and user...")
+    UserFactory(user_type=user_type_objs["admin"])
+    UserFactory(user_type=user_type_objs["user"])
+    db.session.commit()
     
     # use the factories to create fake data
     click.echo("Seeding database with fake users...")

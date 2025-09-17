@@ -8,6 +8,7 @@ import random
 # Import your models
 from app.models.car import Car, CarBrand, CarModel, EngineType, TransmissionType, BodyType, DriveType
 from app.models.user import User, UserType
+from werkzeug.security import generate_password_hash
 
 fake = Faker()
 
@@ -39,10 +40,26 @@ class UserFactory(BaseFactory):
     class Meta:
         model = User
 
-    username = factory.LazyFunction(fake.user_name)
+      # Placeholder username; real username set after flush
+    username = factory.LazyFunction(lambda: "tempuser")
     email = factory.LazyFunction(fake.email)
     user_type = factory.LazyAttribute(lambda o: random.choice(get_user_types()))
-    
+    password_hash = factory.LazyFunction(lambda: generate_password_hash("userPassword"))
+
+    @factory.post_generation
+    def set_username(obj, create, extracted, **kwargs):
+        # Ensure the object has an ID
+         if obj.id:
+            if obj.user_type.name.lower() == "admin":
+                obj.username = f"admin{obj.id}"
+                obj.set_password("adminPassword")  # hashed
+            else:
+                obj.username = f"user{obj.id}"
+                obj.set_password("userPassword")  # hashed
+                
+            db.session.add(obj)
+            db.session.flush()    
+            
 class CarBrandFactory(BaseFactory):
     class Meta:
         model = CarBrand
