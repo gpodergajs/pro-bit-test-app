@@ -20,6 +20,7 @@ class Car(db.Model):
     color = db.Column(db.String(30))
     doors = db.Column(db.Integer)
     registration_year = db.Column(db.Integer)
+    price = db.Column(db.Float)
 
     # Relationships (use string names to avoid circular imports)
     model = db.relationship("CarModel", back_populates="cars", lazy="joined")

@@ -93,3 +93,4 @@ class CarFactory(BaseFactory):
     color = factory.LazyFunction(lambda: fake.color_name())
     doors = factory.LazyFunction(lambda: random.choice([2, 3, 4, 5]))
     registration_year = factory.LazyFunction(lambda: random.randint(2000, 2025))
+    price = factory.LazyFunction(lambda: round(random.uniform(0, 100000), 2))

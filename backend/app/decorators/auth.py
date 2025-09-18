@@ -12,10 +12,10 @@ def role_required(role_name: str):
             if not user_id or not user_type_id:
                 return {"error": "Unauthorized"}, 401
 
-            from app.models.user import UserType
-            user_type = UserType.query.get(int(user_type_id))
+            from app.enum.user_type_enum import UserTypeEnum
 
-            if not user_type or user_type.name.lower() != role_name.lower():
+            # Compare directly against the enum value (ID)
+            if int(user_type_id) != UserTypeEnum.ADMIN.value:
                 return {"error": "Forbidden"}, 403
 
             return fn(*args, **kwargs)

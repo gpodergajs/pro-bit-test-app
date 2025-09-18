@@ -4,6 +4,7 @@ from app import db
 from app.database.seed.factories import CarFactory, UserFactory
 from app.models.car import Car, EngineType, TransmissionType, BodyType, DriveType
 from app.models.user import  UserType
+from app.enum.user_type_enum import UserTypeEnum
 
 @click.command(name="seed_db")
 @with_appcontext
@@ -17,12 +18,17 @@ def seed_db():
     # Seed lookup tables if they are empty
     click.echo("Seeding database lookup tables...")
     user_type_objs = {}
-    for ut in ["user", "admin"]:
-        obj = UserType.query.filter_by(name=ut).first()
+    USER_TYPE_LABELS = {
+            UserTypeEnum.ADMIN: "admin",
+            UserTypeEnum.CUSTOMER: "user", 
+    }
+
+    for enum_member, label in USER_TYPE_LABELS.items():
+        obj = UserType.query.get(enum_member.value)
         if not obj:
-            obj = UserType(name=ut)
+            obj = UserType(id=enum_member.value, name=label)
             db.session.add(obj)
-        user_type_objs[ut] = obj
+        user_type_objs[enum_member] = obj
 
     for btype in ["SUV", "Sedan", "Hatchback"]:
         if not BodyType.query.filter_by(type=btype).first():
