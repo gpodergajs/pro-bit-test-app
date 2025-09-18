@@ -10,6 +10,8 @@ from app.models.car import Car, CarBrand, CarModel, EngineType, TransmissionType
 from app.models.user import User, UserType
 from werkzeug.security import generate_password_hash
 
+from app.enum.user_type_enum import UserTypeEnum
+
 fake = Faker()
 
 # --- Functions to lazily load database choices ---
@@ -50,7 +52,7 @@ class UserFactory(BaseFactory):
     def set_username(obj, create, extracted, **kwargs):
         # Ensure the object has an ID
          if obj.id:
-            if obj.user_type.name.lower() == "admin":
+            if obj.user_type.id == UserTypeEnum.ADMIN.value:
                 obj.username = f"admin{obj.id}"
                 obj.set_password("adminPassword")  # hashed
             else:

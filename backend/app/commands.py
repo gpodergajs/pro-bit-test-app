@@ -20,7 +20,7 @@ def seed_db():
     user_type_objs = {}
     USER_TYPE_LABELS = {
             UserTypeEnum.ADMIN: "admin",
-            UserTypeEnum.CUSTOMER: "user", 
+            UserTypeEnum.USER: "user", 
     }
 
     for enum_member, label in USER_TYPE_LABELS.items():
@@ -31,27 +31,27 @@ def seed_db():
         user_type_objs[enum_member] = obj
 
     for btype in ["SUV", "Sedan", "Hatchback"]:
-        if not BodyType.query.filter_by(type=btype).first():
-            db.session.add(BodyType(type=btype))
+        if not BodyType.query.filter_by(name=btype).first():
+            db.session.add(BodyType(name=btype))
 
     for etype in ["Petrol", "Diesel", "Electric", "Hybrid"]:
-        if not EngineType.query.filter_by(type=etype).first():
-            db.session.add(EngineType(type=etype))
+        if not EngineType.query.filter_by(name=etype).first():
+            db.session.add(EngineType(name=etype))
 
     for ttype in ["Automatic", "Manual", "CVT"]:
-        if not TransmissionType.query.filter_by(type=ttype).first():
-            db.session.add(TransmissionType(type=ttype))
+        if not TransmissionType.query.filter_by(name=ttype).first():
+            db.session.add(TransmissionType(name=ttype))
 
     for dtype in ["FWD", "AWD", "RWD"]:
-        if not DriveType.query.filter_by(type=dtype).first():
-            db.session.add(DriveType(type=dtype))
-    
+        if not DriveType.query.filter_by(name=dtype).first():
+            db.session.add(DriveType(name=dtype))
+
     # commit so that factories can use these entries
     db.session.commit()    
     
     click.echo("Seeding admin and user...")
-    UserFactory(user_type=user_type_objs["admin"])
-    UserFactory(user_type=user_type_objs["user"])
+    UserFactory(user_type=user_type_objs[UserTypeEnum.ADMIN])
+    UserFactory(user_type=user_type_objs[UserTypeEnum.USER])
     db.session.commit()
     
     # use the factories to create fake data

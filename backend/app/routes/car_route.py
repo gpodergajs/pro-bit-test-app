@@ -1,8 +1,11 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+from pydantic import ValidationError
+from app.dto import CarCreateDTO, CarUpdateDTO, CarReadDTO
 from app.schemas.car_schema import CarSchema
 from app.decorators import role_required
 from app.services.car_service import CarService
+
 
 car_bp = Blueprint("car", __name__)
 car_schema = CarSchema()
@@ -16,8 +19,10 @@ def list_cars():
 
     response, status = CarService.get_all_cars(page=page, per_page=per_page)
     if "items" in response:
+        # Convert each Car instance to CarReadDTO dict
+        cars = [CarReadDTO.model_validate(car).model_dump() for car in response["items"]]
         return {
-            "cars": cars_schema.dump(response["items"]),
+            "cars": cars,
             "page": response["page"],
             "total_pages": response["total_pages"],
             "total_items": response["total_items"],
@@ -28,10 +33,12 @@ def list_cars():
 # Get car by ID
 @car_bp.route("/<int:car_id>", methods=["GET"])
 def get_car(car_id):
-    response, status = CarService.get_car_by_id(car_id)
-    if isinstance(response, dict):  # error response
-        return response, status
-    return car_schema.dump(response), status
+    car, status = CarService.get_car_by_id(car_id)
+    if isinstance(car, dict):  # error response
+        return car, status
+
+    car_dto = CarReadDTO.model_validate(car)
+    return car_dto.model_dump(), status
 
 
 # Create car
@@ -39,32 +46,38 @@ def get_car(car_id):
 @jwt_required()
 def add_car():
     data = request.get_json()
-    response, status = CarService.create_car(
-        make=data["make"],
-        model=data["model"],
-        year=data["year"],
-        price=data["price"],
-    )
-    if isinstance(response, dict):  # error response
-        return response, status
-    return car_schema.dump(response), status
+    try:
+        dto = CarCreateDTO(**data)
+    except ValidationError as e:
+        return {"errors": e.errors()}, 422
 
+    response, status = CarService.create_car(dto)
+
+    # If an error dictionary was returned, pass it through
+    if isinstance(response, dict):
+        return response, status
+
+    # Otherwise, serialize Car object using Pydantic DTO
+    car_dto = CarReadDTO.model_validate(response)
+    return car_dto.model_dump(), status
 
 # Update car
 @car_bp.route("/<int:car_id>", methods=["PUT"])
 @jwt_required()
 def edit_car(car_id):
     data = request.get_json()
-    response, status = CarService.update_car(
-        car_id=car_id,
-        make=data.get("make"),
-        model=data.get("model"),
-        year=data.get("year"),
-        price=data.get("price"),
-    )
-    if isinstance(response, dict):  # error response
-        return response, status
-    return car_schema.dump(response), status
+    try:
+        dto = CarUpdateDTO(**data)
+    except ValidationError as e:
+        return {"errors": e.errors()}, 422
+
+    car, status = CarService.update_car(car_id=car_id, dto=dto)
+    
+    if isinstance(car, dict):
+        return car, status
+
+    car_dto = CarReadDTO.model_validate(car)
+    return car_dto.model_dump(), status
 
 
 # Delete car
