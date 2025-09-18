@@ -1,20 +1,3 @@
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div
-    #myToast
-    class="toast"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-  >
-    <div class="toast-header">
-      <strong class="me-auto">Notification</strong>
-      <small>Now</small>
-      <button type="button" class="btn-close" (click)="hideToast()" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-      Hello! This is a Bootstrap toast in Angular 20.
-    </div>
-  </div>
-</div>
-
-<button class="btn btn-primary mt-3" (click)="showToast()">Show Toast</button>
+<app-layout>
+  <router-outlet></router-outlet>
+</app-layout>

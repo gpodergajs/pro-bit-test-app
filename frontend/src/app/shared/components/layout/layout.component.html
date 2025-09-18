@@ -1,0 +1,47 @@
+  <div class="d-flex flex-column min-vh-100">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" routerLink="/">CarApp</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link" routerLink="/cars">Cars</a></li>
+              <li class="nav-item"><a class="nav-link" routerLink="/login">Login</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page header injected by child -->
+      <header class="container py-3">
+        <ng-content select="[page-header]"></ng-content>
+      </header>
+
+      <!-- Main page content -->
+        <main>
+            <router-outlet></router-outlet>
+        </main>
+
+      <!-- Footer -->
+      <footer class="bg-dark text-white text-center py-3 mt-auto">
+        &copy; 2025 CarApp
+      </footer>
+    </div>
+
+
+       <nav> <!-- Navbar --> </nav>
+
+    <header>
+      <ng-content select="[page-header]"></ng-content>
+    </header>

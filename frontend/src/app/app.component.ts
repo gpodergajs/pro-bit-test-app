@@ -1,27 +1,13 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Toast } from 'bootstrap';
+import { LayoutComponent } from './shared/components/layout/layout.component';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, LayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
- @ViewChild('myToast', { static: true }) toastEl!: ElementRef<HTMLDivElement>;
-  toastInstance!: Toast;
-
-  ngAfterViewInit() {
-    this.toastInstance = new Toast(this.toastEl.nativeElement);
-  }
-
-  showToast() {
-    this.toastInstance.show();
-  }
-
-  hideToast() {
-    this.toastInstance.hide();
-  }
-}
+export class AppComponent {}
