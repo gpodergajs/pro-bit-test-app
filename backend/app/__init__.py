@@ -2,9 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 from flask_migrate import Migrate 
+from flask_jwt_extended import JWTManager
+
 
 db = SQLAlchemy()
 migrate = Migrate()
+jwt = JWTManager()
 
 def create_app():
     """
@@ -12,28 +15,23 @@ def create_app():
     """
     app = Flask(__name__)
     app.config.from_object(Config)
+    jwt.init_app(app)
+
 
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # --- Import and Register Blueprints ---
+    from .routes.car_route import car_bp
+    from .routes.auth_route import auth_bp
 
-    # Import the blueprint object from your routes file
-    from .routes import api_bp
-    
-    # Register the blueprint with the app and set a URL prefix.
-    # All routes in api_bp will now be prefixed with /api.
-    # So, '/cars' becomes '/api/cars'.
-    app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(car_bp, url_prefix='/api/cars')
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
 
     # --- Import Commands and Create DB ---
-    
-    from .commands import seed_db
-    app.cli.add_command(seed_db)
-
     with app.app_context():
-        # You need to import models here so create_all knows about them
-        from . import models
+         # Lazy import to avoid circular dependency
+        from app.commands import seed_db
+        app.cli.add_command(seed_db)
         db.create_all()
 
     return app
