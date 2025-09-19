@@ -1,0 +1,26 @@
+<div class="car-list">
+  <ng-container *ngFor="let car of cars">
+    <mat-card class="car-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{ car.model.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
+        <mat-card-subtitle>{{ car.body_type.name }} | {{ car.color }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <img mat-card-image class="car-image" [alt]="car.model.name">
+
+      <mat-card-content>
+        <p><strong>Mileage:</strong> {{ car.mileage | number }} km</p>
+        <p><strong>Doors:</strong> {{ car.doors }}</p>
+        <p><strong>Engine:</strong> {{ car.engine_capacity }}L {{ car.engine_type.name }}</p>
+        <p><strong>Transmission:</strong> {{ car.transmission_type.name }}</p>
+        <p><strong>Year:</strong> {{ car.registration_year }}</p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary">View Details</button>
+        <button mat-button color="accent">Buy Now</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+</div>
