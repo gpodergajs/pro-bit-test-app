@@ -12,14 +12,32 @@ car_schema = CarSchema()
 cars_schema = CarSchema(many=True)
 
 # Get all cars
-@car_bp.route("/", methods=["GET"])
+# Get all cars with optional filters
+@car_bp.route("/", methods=["GET", "OPTIONS"])
 def list_cars():
+    # Pagination
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
 
-    response, status = CarService.get_all_cars(page=page, per_page=per_page)
+    # Filters
+    price_from = request.args.get("price_from", type=float)
+    price_to = request.args.get("price_to", type=float)
+    mileage = request.args.get("mileage", type=float)
+    year = request.args.get("year", type=int)
+
+    filters = {}
+    if price_from is not None:
+        filters["price_from"] = price_from
+    if price_to is not None:
+        filters["price_to"] = price_to
+    if mileage is not None:
+        filters["mileage"] = mileage
+    if year is not None:
+        filters["year"] = year
+
+    response, status = CarService.get_all_cars(page=page, per_page=per_page, filters=filters)
+
     if "items" in response:
-        # Convert each Car instance to CarReadDTO dict
         cars = [CarReadDTO.model_validate(car).model_dump() for car in response["items"]]
         return {
             "cars": cars,
@@ -27,6 +45,7 @@ def list_cars():
             "total_pages": response["total_pages"],
             "total_items": response["total_items"],
         }, status
+
     return response, status
 
 

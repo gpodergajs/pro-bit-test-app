@@ -1,22 +1,45 @@
-from typing import Tuple, Any
+from typing import Dict, Tuple, Any
 from app import db
 from app.models.car import Car
 from app.dto.car.car_create_dto import CarCreateDTO
 from app.dto.car.car_update_dto import CarUpdateDTO
 
 class CarService:
+    
     @staticmethod
-    def get_all_cars(page: int = 1, per_page: int = 10) -> Tuple[Any, int]:
+    def get_all_cars(
+        page: int = 1,
+        per_page: int = 10,
+        filters: Dict[str, Any] = None
+    ) -> Tuple[Any, int]:
         """
-        Get all cars with pagination.
+        Get all cars with pagination and optional filters.
+        Filters can include:
+          - price_from
+          - price_to
+          - mileage
+          - year
         Returns a dict with pagination data and Car objects.
         """
-        paginated = Car.query.paginate(page=page, per_page=per_page, error_out=False)
+        query = Car.query  # Start with base query
+
+        if filters:
+            if "price_from" in filters and filters["price_from"] is not None:
+                query = query.filter(Car.price >= filters["price_from"])
+            if "price_to" in filters and filters["price_to"] is not None:
+                query = query.filter(Car.price <= filters["price_to"])
+            if "mileage" in filters and filters["mileage"] is not None:
+                query = query.filter(Car.mileage <= filters["mileage"])
+            if "year" in filters and filters["year"] is not None:
+                query = query.filter(Car.registration_year == filters["year"])
+
+        paginated = query.paginate(page=page, per_page=per_page, error_out=False)
+
         return {
-            "items": paginated.items,      # list of Car objects
-            "page": page,
+            "items": paginated.items,
+            "page": paginated.page,
             "total_pages": paginated.pages,
-            "total_items": paginated.total,
+            "total_items": paginated.total
         }, 200
 
     @staticmethod
