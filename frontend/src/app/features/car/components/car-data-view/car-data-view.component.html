@@ -1,26 +1,93 @@
-<div class="car-list">
-  <ng-container *ngFor="let car of cars">
-    <mat-card class="car-card" appearance="outlined">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>{{ car.model.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
-        <mat-card-subtitle>{{ car.body_type.name }} | {{ car.color }}</mat-card-subtitle>
-      </mat-card-header>
+<div class="car-data-view-container">
+  <div class="car-controls-sticky-header">
+    
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+      <div class="car-filter-bar">
+        <!-- Price From -->
+        <mat-form-field appearance="outline">
+          <mat-label>Price From</mat-label>
+          <input
+            type="number"
+            matInput
+            [(ngModel)]="filters.priceFrom"
+            placeholder="Min Price" />
+        </mat-form-field>
 
-      <img mat-card-image class="car-image" [alt]="car.model.name">
+        <!-- Price To -->
+        <mat-form-field appearance="outline">
+          <mat-label>Price To</mat-label>
+          <input
+            type="number"
+            matInput
+            [(ngModel)]="filters.priceTo"
+            placeholder="Max Price" />
+        </mat-form-field>
 
-      <mat-card-content>
-        <p><strong>Mileage:</strong> {{ car.mileage | number }} km</p>
-        <p><strong>Doors:</strong> {{ car.doors }}</p>
-        <p><strong>Engine:</strong> {{ car.engine_capacity }}L {{ car.engine_type.name }}</p>
-        <p><strong>Transmission:</strong> {{ car.transmission_type.name }}</p>
-        <p><strong>Year:</strong> {{ car.registration_year }}</p>
-      </mat-card-content>
+        <!-- Mileage -->
+        <mat-form-field appearance="outline">
+          <mat-label>Mileage (km)</mat-label>
+          <input
+            type="number"
+            matInput
+            [(ngModel)]="filters.mileage"
+            placeholder="Max Mileage" />
+        </mat-form-field>
 
-      <mat-card-actions>
-        <button mat-button color="primary">View Details</button>
-        <button mat-button color="accent">Buy Now</button>
-      </mat-card-actions>
-    </mat-card>
-  </ng-container>
+        <!-- Year of Registration with Autocomplete -->
+        <mat-form-field appearance="outline">
+          <mat-label>Year of Registration</mat-label>
+          <input
+            type="text"
+            matInput
+            [matAutocomplete]="autoYear"
+            [(ngModel)]="filters.year" />
+
+          <mat-autocomplete #autoYear="matAutocomplete">
+            <mat-option
+              *ngFor="let year of filteredYears"
+              [value]="year">
+              {{ year }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Filter Buttons -->
+        <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+        <button mat-raised-button (click)="clearFilter()">Clear</button>
+      </div>
+      <app-paginator
+        [length]="totalCars"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)">
+      </app-paginator>
+    </div>
+  </div>
+
+  <div class="car-list">
+    <ng-container *ngFor="let car of cars">
+      <mat-card class="car-card" appearance="outlined">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>{{ car.model.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
+          <mat-card-subtitle>{{ car.body_type.name }} | {{ car.color }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <img mat-card-image class="car-image" [alt]="car.model.name">
+
+        <mat-card-content>
+          <p><strong>Mileage:</strong> {{ car.mileage | number }} km</p>
+          <p><strong>Doors:</strong> {{ car.doors }}</p>
+          <p><strong>Engine:</strong> {{ car.engine_capacity }}L {{ car.engine_type.name }}</p>
+          <p><strong>Transmission:</strong> {{ car.transmission_type.name }}</p>
+          <p><strong>Year:</strong> {{ car.registration_year }}</p>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary">View Details</button>
+          <button mat-button color="accent">Buy Now</button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
 </div>

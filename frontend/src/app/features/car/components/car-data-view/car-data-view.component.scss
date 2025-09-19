@@ -1,3 +1,28 @@
+.car-data-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.car-controls-sticky-header {
+  position: sticky;
+  top: 64px; /* Offset by the height of the main header */
+  z-index: 998; /* Below the main header (z-index: 1000) */
+  background-color: white; /* Or your app's background color */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem; /* Adjust padding */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+}
+
+app-filter {
+  margin-right: 1rem; /* Adjust margin between filter and paginator */
+}
+
 .car-list {
   display: flex;
   flex-direction: column; /* stack vertically */
@@ -20,4 +45,13 @@
 .car-image {
   height: 200px;
   object-fit: cover;
+}
+
+
+.car-filter-bar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
