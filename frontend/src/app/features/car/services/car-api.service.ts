@@ -41,21 +41,45 @@ export class CarApiService {
    * Get paginated list of cars
    * @param page page number (default 1)
    * @param perPage items per page (default 10)
+   * @param filterField The field to filter by (e.g., 'model', 'color')
+   * @param filterValue The value to filter for
    */
-  getCars(page = 1, perPage = 10): Observable<PaginatedCars> {
-    const params = new HttpParams()
-      .set('page', page)
-      .set('per_page', perPage);
+ getCars(
+  page = 1,
+  perPage = 10,
+  filters?: { priceFrom?: number; priceTo?: number; mileage?: number; year?: number }
+): Observable<PaginatedCars> {
+  let params = new HttpParams()
+    .set('page', page)
+    .set('per_page', perPage);
 
-    return this.http.get<PaginatedCars>(this.baseUrl, { params });
+  if (filters) {
+    if (filters.priceFrom != null) {
+      params = params.set('price_from', filters.priceFrom.toString());
+    }
+    if (filters.priceTo != null) {
+      params = params.set('price_to', filters.priceTo.toString());
+    }
+    if (filters.mileage != null) {
+      params = params.set('mileage', filters.mileage.toString());
+    }
+    if (filters.year != null) {
+      params = params.set('year', filters.year.toString());
+    }
   }
+
+  return this.http.get<PaginatedCars>(this.baseUrl, { params });
+}
+
 
   /**
-   * Get a single car by ID
-   * @param carId Car ID
-   */
-  getCarById(carId: number): Observable<Car> {
-    const url = `${this.baseUrl}/${carId}`;
-    return this.http.get<Car>(url);
+ * Get a single car by ID
+ * @param carId Car ID
+ */
+getCarById(carId: number): Observable<Car> {
+  const url = `${this.baseUrl}/${carId}`;
+    console.log('Fetching car with ID:', carId, 'URL:', url); // optional debug
+    return this.http.get<any>(url);
   }
 }
+
