@@ -1,4 +1,60 @@
-<ng-container *ngIf="cars$ | async as cars">
-  <app-car-data-view [cars]="cars"></app-car-data-view>
-</ng-container>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+  <div class="car-filter-bar" style="display: flex; gap: 1rem; flex-wrap: wrap;">
 
+    <!-- Price From -->
+    <mat-form-field appearance="outline">
+      <mat-label>Price From</mat-label>
+      <mat-select [(ngModel)]="filters.priceFrom">
+        <mat-option *ngFor="let price of priceOptions" [value]="price">
+          {{ price | currency:'USD' }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Price To -->
+    <mat-form-field appearance="outline">
+      <mat-label>Price To</mat-label>
+      <mat-select [(ngModel)]="filters.priceTo">
+        <mat-option *ngFor="let price of priceOptions" [value]="price">
+          {{ price | currency:'USD' }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Mileage -->
+    <mat-form-field appearance="outline">
+      <mat-label>Mileage (km)</mat-label>
+      <mat-select [(ngModel)]="filters.mileage">
+        <mat-option *ngFor="let m of mileageOptions" [value]="m">
+          {{ m | number }} km
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Year of Registration -->
+    <mat-form-field appearance="outline">
+      <mat-label>Year of Registration</mat-label>
+      <mat-select [(ngModel)]="filters.year">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Filter Buttons -->
+    <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+    <button mat-raised-button (click)="clearFilter()">Clear</button>
+
+     <app-paginator
+        [length]="totalCars"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)">
+    </app-paginator>
+  </div>
+
+  <ng-container *ngIf="cars$ | async as cars">
+    <app-car-data-view [cars]="cars"></app-car-data-view>
+  </ng-container>
+
+</div>
