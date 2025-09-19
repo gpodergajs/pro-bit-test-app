@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 
 export interface Car {
   id: number;
@@ -32,6 +32,14 @@ export interface PaginatedCars {
   providedIn: 'root'
 })
 export class CarApiService {
+
+  // Caches
+  private transmissionCache: any[] | null = null;
+  private driveCache: any[] | null = null;
+  private ownerCache: any[] | null = null;
+  private bodyCache: any[] | null = null;
+  private modelCache: any[] | null = null;
+  private colorCache: string[] | null = null;
 
    private readonly baseUrl = '/api/cars'; // Remove http://localhost:5000
 
@@ -80,6 +88,54 @@ getCarById(carId: number): Observable<Car> {
   const url = `${this.baseUrl}/${carId}`;
     console.log('Fetching car with ID:', carId, 'URL:', url); // optional debug
     return this.http.get<any>(url);
+  }
+
+  updateCar(carId: number, car: Car): Observable<Car> {
+  return this.http.put<Car>(`/api/cars/${carId}`, car);
+}
+
+  /** Dropdown services with caching */
+
+  getTransmissionTypes(): Observable<any[]> {
+    if (this.transmissionCache) return of(this.transmissionCache);
+    return this.http.get<any[]>(`${this.baseUrl}/transmissions`).pipe(
+      tap(data => this.transmissionCache = data)
+    );
+  }
+
+  getDriveTypes(): Observable<any[]> {
+    if (this.driveCache) return of(this.driveCache);
+    return this.http.get<any[]>(`${this.baseUrl}/drives`).pipe(
+      tap(data => this.driveCache = data)
+    );
+  }
+
+  getOwners(): Observable<any[]> {
+    if (this.ownerCache) return of(this.ownerCache);
+    return this.http.get<any[]>(`${this.baseUrl}/owners`).pipe(
+      tap(data => this.ownerCache = data)
+    );
+  }
+
+  getBodyTypes(): Observable<any[]> {
+    if (this.bodyCache) return of(this.bodyCache);
+    return this.http.get<any[]>(`${this.baseUrl}/bodies`).pipe(
+      tap(data => this.bodyCache = data)
+    );
+  }
+
+  getModels(): Observable<any[]> {
+    if (this.modelCache) return of(this.modelCache);
+    return this.http.get<any[]>(`${this.baseUrl}/models`).pipe(
+      tap(data => this.modelCache = data)
+    );
+  }
+
+  getColors(): Observable<string[]> {
+    if (this.colorCache) return of(this.colorCache);
+    return this.http.get<string[]>(`${this.baseUrl}/colors`).pipe(
+      tap(data => this.colorCache = data)
+    );
   }
 }
 
