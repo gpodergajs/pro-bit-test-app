@@ -1,0 +1,25 @@
+<mat-sidenav-container class="layout-container" autosize>
+
+  <!-- Main content area -->
+  <mat-sidenav-content>
+    
+    <!-- Top navigation bar -->
+    <mat-toolbar color="primary">
+      <span>My App</span>
+      <span class="spacer"></span>
+      <!-- Optional right-aligned items -->
+      <button mat-icon-button><mat-icon>account_circle</mat-icon></button>
+    </mat-toolbar>
+
+    <!-- Main content -->
+    <main class="layout-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <mat-toolbar color="accent" class="layout-footer">
+      <span>&copy; 2025 My Company</span>
+    </mat-toolbar>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
