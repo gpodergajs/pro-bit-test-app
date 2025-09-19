@@ -2,6 +2,10 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 from pydantic import ValidationError
 from app.dto import CarCreateDTO, CarUpdateDTO, CarReadDTO
+from app.dto.car.body_type_dto import BodyTypeDTO
+from app.dto.car.drive_type_dto import DriveTypeDTO
+from app.dto.car.engine_type_dto import EngineTypeDTO
+from app.dto.car.transmission_type_dto import TransmissionTypeDTO
 from app.schemas.car_schema import CarSchema
 from app.decorators import role_required
 from app.services.car_service import CarService
@@ -82,7 +86,7 @@ def add_car():
 
 # Update car
 @car_bp.route("/<int:car_id>", methods=["PUT"])
-@jwt_required()
+#@jwt_required()
 def edit_car(car_id):
     data = request.get_json()
     try:
@@ -106,3 +110,33 @@ def edit_car(car_id):
 def remove_car(car_id):
     response, status = CarService.delete_car(car_id)
     return response, status
+
+@car_bp.route("/transmissions", methods=["GET"])
+def get_transmissions():
+    data, status = CarService.get_transmission_types()
+    return {"transmission_types": data}, status
+
+@car_bp.route("/drives", methods=["GET"])
+def get_drives():
+    data, status = CarService.get_drive_types()
+    return {"drive_types": data}, status
+
+@car_bp.route("/bodies", methods=["GET"])
+def get_bodies():
+    data, status = CarService.get_body_types()
+    return {"body_types": data}, status
+
+@car_bp.route("/engines", methods=["GET"])
+def get_engines():
+    data, status = CarService.get_engine_types()
+    return {"engine_types": data}, status
+
+@car_bp.route("/models", methods=["GET"])
+def get_models():
+    data, status = CarService.get_models()
+    return {"models": data}, status
+
+@car_bp.route("/owners", methods=["GET"])
+def get_owners():
+    data, status = CarService.get_owners()
+    return {"owners": data}, status

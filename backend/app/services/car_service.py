@@ -1,8 +1,10 @@
 from typing import Dict, Tuple, Any
 from app import db
-from app.models.car import Car
+from app.models.car import Car, BodyType, DriveType, EngineType, TransmissionType
 from app.dto.car.car_create_dto import CarCreateDTO
 from app.dto.car.car_update_dto import CarUpdateDTO
+from app.models.car.car_model import CarModel
+from app.models.user.user import User
 
 class CarService:
     
@@ -96,3 +98,33 @@ class CarService:
         except Exception as e:
             db.session.rollback()
             return {"error": str(e)}, 500
+
+    @staticmethod
+    def get_owners():
+        owners = User.query.all()  # query the User table directly
+        return [{"id": o.id, "username": o.username} for o in owners], 200
+
+    @staticmethod
+    def get_models():
+        models = CarModel.query.all()  # query the CarModel table directly
+        return [{"id": m.id, "name": m.name} for m in models], 200
+
+    @staticmethod
+    def get_body_types():
+        body_types = BodyType.query.all()
+        return [{"id": b.id, "name": b.name} for b in body_types], 200
+
+    @staticmethod
+    def get_transmission_types():
+        transmissions = TransmissionType.query.all()
+        return [{"id": t.id, "name": t.name} for t in transmissions], 200
+
+    @staticmethod
+    def get_drive_types():
+        drives = DriveType.query.all()
+        return [{"id": d.id, "name": d.name} for d in drives], 200
+
+    @staticmethod
+    def get_engine_types():
+        engines = EngineType.query.all()
+        return [{"id": e.id, "name": e.name} for e in engines], 200
