@@ -19,10 +19,6 @@ import { FormsModule } from "@angular/forms";
     CommonModule,
     MatCardModule,
     MatButtonModule,
-    // If you are no longer using <app-filter>, remove FilterComponent
-    // FilterComponent,
-    PaginatorComponent,
-
     // Angular Material form controls
     MatFormFieldModule,
     MatInputModule,
