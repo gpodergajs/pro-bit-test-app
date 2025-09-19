@@ -19,11 +19,8 @@ import { PaginatorComponent } from '../../../../shared/components/paginator/pagi
   imports: [CommonModule,   CommonModule,
     MatCardModule,
     MatButtonModule,
-    // If you are no longer using <app-filter>, remove FilterComponent
-    // FilterComponent,
     PaginatorComponent,
     CarDataViewComponent,
-    // Angular Material form controls
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -66,6 +63,7 @@ cars$: Observable<Car[]> = of([]);
     this.cars$ = this.carApi.getCars(this.pageIndex + 1, this.pageSize, this.filters).pipe(
       map(response => {
         this.totalCars = response.total_items; // Update totalCars for paginator
+        console.log(response)
         return response.cars;
       }),
       catchError(err => {

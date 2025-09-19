@@ -1,0 +1,33 @@
+<div class="car-details-container" style="max-width: 1000px; margin: 0 auto; padding: 16px;">
+  <mat-card *ngIf="car">
+    <!-- Car title and price -->
+    <mat-card-header>
+      <mat-card-title>{{ car.model.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
+      <mat-card-subtitle>{{ car.body_type.name }} | {{ car.color }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <!-- Main image -->
+    <img mat-card-image [src]="'https://www.tms.si/wp-content/uploads/2020/12/141492.jpg'" [alt]="car.model.name" class="main-car-image">
+
+    <mat-divider></mat-divider>
+
+    <!-- Car specifications -->
+    <mat-card-content>
+      <h3>Specifications</h3>
+      <div class="specs-grid">
+        <div><strong>Mileage:</strong> {{ car.mileage | number }} km</div>
+        <div><strong>Doors:</strong> {{ car.doors }}</div>
+        <div><strong>Engine:</strong> {{ car.engine_capacity }}L {{ car.engine_type.name }}</div>
+        <div><strong>Transmission:</strong> {{ car.transmission_type.name }}</div>
+        <div><strong>Drive Type:</strong> {{ car.drive_type.name }}</div>
+        <div><strong>Fuel Consumption:</strong> {{ car.fuel_consumption }} L/100km</div>
+        <div><strong>Year:</strong> {{ car.registration_year }}</div>
+        <div><strong>Color:</strong> {{ car.color }}</div>
+        <div><strong>License Plate:</strong> {{ car.license_plate }}</div>
+        <div><strong>VIN:</strong> {{ car.vin }}</div>
+        <div><strong>Owner:</strong> {{ car.owner.username }}</div>
+        <div><strong>Body Type:</strong> {{ car.body_type.name }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
