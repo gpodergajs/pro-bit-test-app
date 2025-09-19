@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 from flask_migrate import Migrate 
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 
 db = SQLAlchemy()
@@ -14,6 +15,7 @@ def create_app():
     An application factory, which creates and configures the app.
     """
     app = Flask(__name__)
+    CORS(app)  # Enable CORS for all routes
     app.config.from_object(Config)
     jwt.init_app(app)
 
