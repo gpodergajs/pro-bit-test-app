@@ -1,6 +1,6 @@
 import { PageEvent } from "@angular/material/paginator";
 import { Car, CarApiService } from "../../services/car-api.service";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -11,6 +11,9 @@ import { MatCardModule } from "@angular/material/card";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { FormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
+import { AuthService } from "../../../auth/services/auth.service";
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
 
 
 @Component({
@@ -20,20 +23,28 @@ import { RouterLink } from "@angular/router";
     CommonModule,
     MatCardModule,
     MatButtonModule,
-    // Angular Material form controls
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
     FormsModule,
-    RouterLink
+    RouterLink,
+    MatGridListModule
   ],
   templateUrl: './car-data-view.component.html',  
   styleUrls: ['./car-data-view.component.scss']
 })
 export class CarDataViewComponent implements OnInit {
   @Input() cars: Car[] = [];
+
+  isAdmin: boolean = false;
+
+
+  constructor(public authService: AuthService, private breakpointObserver: BreakpointObserver) {}
+
   ngOnInit(): void {
-    console.log(this.cars)
+    this.isAdmin = this.authService.isAdmin();
   }
+
+  
 }

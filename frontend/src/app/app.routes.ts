@@ -23,7 +23,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/car/components/car-details/car-details.component')
             .then((m) => m.CarDetailsComponent),
-        canActivate: [authGuard],
+        canActivate: [],
       },
       {
         path: 'cars/edit/:id',
