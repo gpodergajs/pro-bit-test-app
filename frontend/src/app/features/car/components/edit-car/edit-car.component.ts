@@ -15,7 +15,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
-import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
+import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
 
 
 @Component({
@@ -40,7 +40,7 @@ export class EditCarComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private carApi = inject(CarApiService);
   private router = inject(Router);
-  private errorHandlingService = inject(ErrorHandlingService);
+  private messageService = inject(MessageService); // Inject MessageService
 
   car!: Car;
 
@@ -68,23 +68,23 @@ export class EditCarComponent implements OnInit {
   loadDropdownsAndCar(carId: number) {
     forkJoin({
       models: this.carApi.getModels().pipe(catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        this.messageService.showError(error);
         return of([]);
       })),
       bodyTypes: this.carApi.getBodyTypes().pipe(catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        this.messageService.showError(error);
         return of([]);
       })),
       transmissionTypes: this.carApi.getTransmissionTypes().pipe(catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        this.messageService.showError(error);
         return of([]);
       })),
       driveTypes: this.carApi.getDriveTypes().pipe(catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        this.messageService.showError(error);
         return of([]);
       })),
       owners: this.carApi.getOwners().pipe(catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        this.messageService.showError(error);
         return of([]);
       }))
     }).subscribe({
@@ -100,14 +100,14 @@ export class EditCarComponent implements OnInit {
         // After dropdowns are loaded, load the car
         this.loadCar(carId);
       },
-      error: (err) => this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err))
+      error: (err) => this.messageService.showError(err)
     });
   }
 
   loadCar(carId: number) {
     this.carApi.getCarById(carId).subscribe({
       next: (car) => this.car = car,
-      error: (err) => this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err))
+      error: (err) => this.messageService.showError(err)
     });
   }
 
@@ -117,12 +117,12 @@ export class EditCarComponent implements OnInit {
     this.carApi.updateCar(this.car.id, this.car).subscribe({
       next: () => {
         this.saving = false;
-        this.errorHandlingService.showError('Car saved successfully!');
+        this.messageService.showSuccess('Car saved successfully!');
         this.router.navigate(['/cars']); 
       },
       error: (err) => {
         this.saving = false;
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
+        this.messageService.showError(err);
       }
     });
   }

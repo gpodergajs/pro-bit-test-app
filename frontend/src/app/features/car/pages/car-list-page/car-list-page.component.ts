@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
-import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
+import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
 
 @Component({
   selector: 'app-car-list-page',
@@ -39,7 +39,7 @@ import { ErrorHandlingService } from '../../../../core/services/error-handling.s
 export class CarListPageComponent implements OnInit {
   private carApi = inject(CarApiService);
   private fb = inject(FormBuilder);
-  private errorHandlingService = inject(ErrorHandlingService);
+  private messageService = inject(MessageService); // Inject MessageService
 
   private carsSubject = new BehaviorSubject<Car[]>([]);
   cars$ = this.carsSubject.asObservable();
@@ -122,7 +122,7 @@ export class CarListPageComponent implements OnInit {
       }),
       catchError((err: HttpErrorResponse) => {
         console.log(err)
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
+        this.messageService.showError(err);
         return of([]);
       }),
       finalize(() => this.loading = false)
@@ -162,11 +162,11 @@ export class CarListPageComponent implements OnInit {
           const updatedCars = currentCars.filter(car => car.id !== carId);
           this.carsSubject.next(updatedCars);
         } else {
-          this.errorHandlingService.showError('Failed to delete car.');
+          this.messageService.showError('Failed to delete car.');
         }
       },
       error: (err) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
+        this.messageService.showError(err);
       }
     });
   }

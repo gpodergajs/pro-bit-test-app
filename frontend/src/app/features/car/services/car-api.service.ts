@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { ErrorHandlingService } from '../../../core/services/error-handling.service';
+import { MessageService } from '../../../core/services/message.service'; // Import MessageService
 
 export interface Car {
   id: number;
@@ -59,7 +59,7 @@ export interface Model {
 })
 export class CarApiService {
   private http = inject(HttpClient);
-  private errorHandlingService = inject(ErrorHandlingService);
+  private messageService = inject(MessageService); // Inject MessageService
 
 
   // Caches
@@ -114,7 +114,7 @@ export class CarApiService {
   return this.http.delete(`/api/cars/${carId}`, { observe: 'response' }).pipe(
     map(response => response.status === 200),
     catchError((error: HttpErrorResponse) => {
-      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+      this.messageService.showError(error);
       return of(false);
     })               
   );

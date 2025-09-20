@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, tap, throwError } from 'rxjs'; // Removed catchError
 import { UserType } from '../enum/user-type.enum';
 import { ErrorHandlingService } from './error-handling.service';
+import { MessageService } from './message.service'; // Import MessageService
 
 // Removed LoginResponse interface
 
@@ -18,6 +19,7 @@ export interface TokenPayload {
 export class AuthService {
   private http = inject(HttpClient);
   private errorHandlingService = inject(ErrorHandlingService);
+  private messageService = inject(MessageService); // Inject MessageService
 
   private readonly tokenKey = 'auth_token';
   private useLocalStorage = false; // This will be managed by setUseLocalStorage
@@ -59,7 +61,7 @@ export class AuthService {
       return true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+      this.messageService.showError(error); // Use MessageService
       return false;
     }
   }
@@ -95,7 +97,7 @@ export class AuthService {
       return JSON.parse(json);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+      this.messageService.showError(error); // Use MessageService
       return null;
     }
   }

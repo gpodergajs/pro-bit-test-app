@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
-import { AuthService } from '../../../../core/services/auth.service'; // Will be updated later to core/services/auth.service
+import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
+import { AuthService } from '../../../../core/services/auth.service';
 
 export interface LoginResponse {
   access_token: string; // JWT token returned by backend
@@ -13,7 +13,7 @@ export interface LoginResponse {
 })
 export class LoginService {
   private http = inject(HttpClient);
-  private errorHandlingService = inject(ErrorHandlingService);
+  private messageService = inject(MessageService); // Inject MessageService
   private authService = inject(AuthService); // Inject AuthService to call setToken
 
   private readonly apiUrl = '/api/auth';
@@ -31,7 +31,7 @@ export class LoginService {
     return this.http.post<LoginResponse>(url, { username, password }).pipe(
       tap((res) => this.authService.setToken(res.access_token)), // Use AuthService to set token
       catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        this.messageService.showError(error); // Use MessageService
         return throwError(() => error);
       })
     );
