@@ -126,7 +126,7 @@ export class CarApiService {
  */
 getCarById(carId: number): Observable<Car> {
   const url = `${this.baseUrl}/${carId}`;
-    console.log('Fetching car with ID:', carId, 'URL:', url); // optional debug
+    
     return this.http.get<Car>(url);
   }
 

@@ -9,8 +9,8 @@ import { MatCardModule } from "@angular/material/card";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
-import { AuthService } from "../../../auth/services/auth.service";
 import { MatGridListModule } from '@angular/material/grid-list';
+import { AuthService } from "../../../../core/services/auth.service";
 
 
 @Component({

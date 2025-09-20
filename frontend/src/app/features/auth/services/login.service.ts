@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
-import { AuthService } from '../../../../core/services/auth.service';
+import { MessageService } from '../../../core/services/message.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface LoginResponse {
   access_token: string; // JWT token returned by backend

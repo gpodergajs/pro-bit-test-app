@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, throwError } from 'rxjs'; // Removed catchError
 import { UserType } from '../enum/user-type.enum';
 import { ErrorHandlingService } from './error-handling.service';
-import { MessageService } from './message.service'; // Import MessageService
+import { MessageService } from './message.service';
 
 // Removed LoginResponse interface
 

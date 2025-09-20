@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { MatCheckboxModule } from '@angular/material/checkbox'; 
-import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
+import { MessageService } from '../../../../core/services/message.service';
 
 
 @Component({
@@ -22,7 +22,7 @@ import { ErrorHandlingService } from '../../../../core/services/error-handling.s
 export class LoginPageComponent {
   private loginService = inject(LoginService); // Updated injection
   private router = inject(Router);
-  private errorHandlingService = inject(ErrorHandlingService);
+  private messageService = inject(MessageService);
 
   username = '';
   password = '';
@@ -41,7 +41,7 @@ export class LoginPageComponent {
     },
     error: (err) => {
       this.loading = false;
-      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
+      this.messageService.showError(err);
     },
   });
 }

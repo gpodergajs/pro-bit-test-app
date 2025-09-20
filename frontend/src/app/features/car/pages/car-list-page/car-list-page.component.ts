@@ -121,7 +121,7 @@ export class CarListPageComponent implements OnInit {
         return response.cars;
       }),
       catchError((err: HttpErrorResponse) => {
-        console.log(err)
+        
         this.messageService.showError(err);
         return of([]);
       }),
@@ -137,7 +137,7 @@ export class CarListPageComponent implements OnInit {
     }
     this.pageIndex = 0; // Reset to first page when filters change
     this.loadCars();
-    console.log('Filters applied:', this.filterForm.value);
+    
   }
 
   clearFilter() {
@@ -157,7 +157,7 @@ export class CarListPageComponent implements OnInit {
      this.carApi.deleteCar(carId).subscribe({
       next: (success) => {
         if (success) {
-          console.log(`Car ${carId} deleted`);
+          
           const currentCars = this.carsSubject.getValue();
           const updatedCars = currentCars.filter(car => car.id !== carId);
           this.carsSubject.next(updatedCars);
