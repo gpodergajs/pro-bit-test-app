@@ -13,8 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
 
 
 @Component({
@@ -39,7 +39,7 @@ export class EditCarComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private carApi = inject(CarApiService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private errorHandlingService = inject(ErrorHandlingService);
 
   car!: Car;
 
@@ -84,14 +84,14 @@ export class EditCarComponent implements OnInit {
         // After dropdowns are loaded, load the car
         this.loadCar(carId);
       },
-      error: (err) => console.error('Error loading dropdowns', err)
+      error: (err) => this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err))
     });
   }
 
   loadCar(carId: number) {
     this.carApi.getCarById(carId).subscribe({
       next: (car) => this.car = car,
-      error: (err) => console.error('Error loading car', err)
+      error: (err) => this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err))
     });
   }
 
@@ -101,13 +101,12 @@ export class EditCarComponent implements OnInit {
     this.carApi.updateCar(this.car.id, this.car).subscribe({
       next: () => {
         this.saving = false;
-        this.snackBar.open('Car saved successfully!', 'Close', { duration: 3000 });
+        this.errorHandlingService.showError('Car saved successfully!');
         this.router.navigate(['/cars']); 
       },
       error: (err) => {
         this.saving = false;
-        console.error('Error saving car', err);
-        this.snackBar.open('Failed to save car.', 'Close', { duration: 3000 });
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
       }
     });
   }

@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { MatCheckboxModule } from '@angular/material/checkbox'; 
+import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class LoginPageComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private errorHandlingService = inject(ErrorHandlingService);
 
   username = '';
   password = '';
@@ -35,12 +37,11 @@ export class LoginPageComponent {
   this.authService.login(this.username, this.password, this.rememberMe).subscribe({
     next: () => {
       this.loading = false;
-      alert('Login successful!');
       this.router.navigate(['/cars']);
     },
     error: (err) => {
       this.loading = false;
-      alert('Login failed: ' + (err.error?.message || err.message));
+      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
     },
   });
 }

@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
 
 @Component({
   selector: 'app-car-list-page',
@@ -37,6 +38,7 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
 export class CarListPageComponent implements OnInit {
   private carApi = inject(CarApiService);
   private fb = inject(FormBuilder);
+  private errorHandlingService = inject(ErrorHandlingService);
 
   private carsSubject = new BehaviorSubject<Car[]>([]);
   cars$ = this.carsSubject.asObservable();
@@ -117,13 +119,15 @@ export class CarListPageComponent implements OnInit {
         this.totalCars = response.total_items; // Update totalCars for paginator
         return response.cars;
       }),
-      catchError(err => {
-        console.error('Error fetching cars:', err);
+      catchError((err) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
         return of([]);
       }),
       finalize(() => this.loading = false)
     ).subscribe(cars => this.carsSubject.next(cars));
   }
+
+  
 
   applyFilter() {
     if (this.filterForm.invalid) {
@@ -148,16 +152,21 @@ export class CarListPageComponent implements OnInit {
 
 
   handleCarDelete(carId:number) {
-     this.carApi.deleteCar(carId).subscribe(success => {
-    if (success) {
-      console.log(`Car ${carId} deleted`);
-      const currentCars = this.carsSubject.getValue();
-      const updatedCars = currentCars.filter(car => car.id !== carId);
-      this.carsSubject.next(updatedCars);
-    } else {
-      console.error('Failed to delete car');
-    }
-  });
+     this.carApi.deleteCar(carId).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log(`Car ${carId} deleted`);
+          const currentCars = this.carsSubject.getValue();
+          const updatedCars = currentCars.filter(car => car.id !== carId);
+          this.carsSubject.next(updatedCars);
+        } else {
+          this.errorHandlingService.showError('Failed to delete car.');
+        }
+      },
+      error: (err) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
+      }
+    });
   }
 
 

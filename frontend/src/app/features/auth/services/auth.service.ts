@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { UserType } from '../../../core/enum/user-type.enum';
+import { ErrorHandlingService } from '../../../core/services/error-handling.service';
 
 export interface LoginResponse {
   access_token: string; // JWT token returned by backend
@@ -18,6 +19,7 @@ export interface TokenPayload {
 })
 export class AuthService {
 private http = inject(HttpClient);
+private errorHandlingService = inject(ErrorHandlingService);
 
 private readonly apiUrl = '/api/auth';
   private readonly tokenKey = 'auth_token';
@@ -35,12 +37,16 @@ private readonly apiUrl = '/api/auth';
 
     return this.http.post<LoginResponse>(url, { username, password }).pipe(
       tap((res) => this.setToken(res.access_token)),
-      catchError((error) => {
-        console.error('Login failed:', error);
+      catchError((error: HttpErrorResponse) => {
+        console.log(error)
+        console.log(this.errorHandlingService.getErrorMessage(error))
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
         return throwError(() => error);
       })
     );
   }
+
+  
 
   /**
    * Save JWT token
@@ -74,8 +80,9 @@ private readonly apiUrl = '/api/auth';
       const payload = JSON.parse(atob(payloadBase64));
       if (payload.exp && Date.now() >= payload.exp * 1000) return false;
       return true;
-    } catch (e) {
-      console.error('Invalid token', e);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
       return false;
     }
   }
@@ -109,8 +116,9 @@ private readonly apiUrl = '/api/auth';
       // atob can throw if malformed
       const json = atob(payloadBase64);
       return JSON.parse(json);
-    } catch (e) {
-      console.error('Failed to decode token payload', e);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
       return null;
     }
   }
