@@ -55,7 +55,7 @@ export class CarApiService {
  getCars(
   page = 1,
   perPage = 10,
-  filters?: { priceFrom?: number; priceTo?: number; mileage?: number; year?: number }
+  filters?: { priceFrom?: number; priceTo?: number; mileageTo?: number; yearFrom?: number, yearTo?: number }
 ): Observable<PaginatedCars> {
   let params = new HttpParams()
     .set('page', page)
@@ -68,11 +68,14 @@ export class CarApiService {
     if (filters.priceTo != null) {
       params = params.set('price_to', filters.priceTo.toString());
     }
-    if (filters.mileage != null) {
-      params = params.set('mileage', filters.mileage.toString());
+    if (filters.mileageTo != null) {
+      params = params.set('mileage_to', filters.mileageTo.toString());
     }
-    if (filters.year != null) {
-      params = params.set('year', filters.year.toString());
+    if (filters.yearFrom != null) {
+      params = params.set('year_from', filters.yearFrom.toString());
+    }
+    if (filters.yearTo != null) {
+      params = params.set('year_to', filters.yearTo.toString());
     }
   }
 

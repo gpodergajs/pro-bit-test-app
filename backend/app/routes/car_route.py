@@ -19,25 +19,28 @@ cars_schema = CarSchema(many=True)
 # Get all cars with optional filters
 @car_bp.route("/", methods=["GET", "OPTIONS"])
 def list_cars():
-    # Pagination
+  # Pagination
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
 
     # Filters
     price_from = request.args.get("price_from", type=float)
     price_to = request.args.get("price_to", type=float)
-    mileage = request.args.get("mileage", type=float)
-    year = request.args.get("year", type=int)
+    mileage_to = request.args.get("mileage_to", type=float)
+    year_from = request.args.get("year_from", type=int)
+    year_to = request.args.get("year_to", type=int)
 
     filters = {}
     if price_from is not None:
         filters["price_from"] = price_from
     if price_to is not None:
         filters["price_to"] = price_to
-    if mileage is not None:
-        filters["mileage"] = mileage
-    if year is not None:
-        filters["year"] = year
+    if mileage_to is not None:
+        filters["mileage_to"] = mileage_to
+    if year_from is not None:
+        filters["year_from"] = year_from
+    if year_to is not None:
+        filters["year_to"] = year_to
 
     response, status = CarService.get_all_cars(page=page, per_page=per_page, filters=filters)
 

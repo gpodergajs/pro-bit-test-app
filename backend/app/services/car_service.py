@@ -17,10 +17,11 @@ class CarService:
         """
         Get all cars with pagination and optional filters.
         Filters can include:
-          - price_from
-          - price_to
-          - mileage
-          - year
+        - price_from
+        - price_to
+        - mileage_to
+        - year_from
+        - year_to
         Returns a dict with pagination data and Car objects.
         """
         query = Car.query  # Start with base query
@@ -30,10 +31,12 @@ class CarService:
                 query = query.filter(Car.price >= filters["price_from"])
             if "price_to" in filters and filters["price_to"] is not None:
                 query = query.filter(Car.price <= filters["price_to"])
-            if "mileage" in filters and filters["mileage"] is not None:
-                query = query.filter(Car.mileage <= filters["mileage"])
-            if "year" in filters and filters["year"] is not None:
-                query = query.filter(Car.registration_year == filters["year"])
+            if "mileage_to" in filters and filters["mileage_to"] is not None:
+                query = query.filter(Car.mileage <= filters["mileage_to"])
+            if "year_from" in filters and filters["year_from"] is not None:
+                query = query.filter(Car.registration_year >= filters["year_from"])
+            if "year_to" in filters and filters["year_to"] is not None:
+                query = query.filter(Car.registration_year <= filters["year_to"])
 
         paginated = query.paginate(page=page, per_page=per_page, error_out=False)
 
@@ -43,6 +46,7 @@ class CarService:
             "total_pages": paginated.pages,
             "total_items": paginated.total
         }, 200
+
 
     @staticmethod
     def get_car_by_id(car_id: int) -> Tuple[Any, int]:
