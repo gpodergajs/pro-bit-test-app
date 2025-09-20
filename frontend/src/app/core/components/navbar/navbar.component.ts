@@ -1,4 +1,4 @@
-import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs";
 import { AuthService } from "../../../features/auth/services/auth.service";
 import { CommonModule } from "@angular/common";
