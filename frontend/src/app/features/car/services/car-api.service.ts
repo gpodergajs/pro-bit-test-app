@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 
 export interface Car {
@@ -28,22 +28,47 @@ export interface PaginatedCars {
   total_items: number;
 }
 
+export interface Transmission {
+  id: number;
+  name: string;
+}
+
+export interface Drive {
+  id: number;
+  name: string;
+}
+
+export interface Owner {
+  id: number;
+  username: string;
+}
+
+export interface BodyType {
+  id: number;
+  name: string;
+}
+
+export interface Model {
+  id: number;
+  name: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CarApiService {
+  private http = inject(HttpClient);
+
 
   // Caches
-  private transmissionCache: any[] | null = null;
-  private driveCache: any[] | null = null;
-  private ownerCache: any[] | null = null;
-  private bodyCache: any[] | null = null;
-  private modelCache: any[] | null = null;
+  private transmissionCache: Transmission[] | null = null;
+  private driveCache: Drive[] | null = null;
+  private ownerCache: Owner[] | null = null;
+  private bodyCache: BodyType[] | null = null;
+  private modelCache: Model[] | null = null;
   private colorCache: string[] | null = null;
 
-   private readonly baseUrl = '/api/cars'; // Remove http://localhost:5000
-
-    constructor(private http: HttpClient) {}
+   private readonly baseUrl = '/api/cars';
 
     /**
    * Get paginated list of cars
@@ -90,7 +115,7 @@ export class CarApiService {
 getCarById(carId: number): Observable<Car> {
   const url = `${this.baseUrl}/${carId}`;
     console.log('Fetching car with ID:', carId, 'URL:', url); // optional debug
-    return this.http.get<any>(url);
+    return this.http.get<Car>(url);
   }
 
   updateCar(carId: number, car: Car): Observable<Car> {
@@ -99,37 +124,37 @@ getCarById(carId: number): Observable<Car> {
 
   /** Dropdown services with caching */
 
-  getTransmissionTypes(): Observable<any[]> {
+  getTransmissionTypes(): Observable<Transmission[]> {
     if (this.transmissionCache) return of(this.transmissionCache);
-    return this.http.get<any[]>(`${this.baseUrl}/transmissions`).pipe(
+    return this.http.get<Transmission[]>(`${this.baseUrl}/transmissions`).pipe(
       tap(data => this.transmissionCache = data)
     );
   }
 
-  getDriveTypes(): Observable<any[]> {
+  getDriveTypes(): Observable<Drive[]> {
     if (this.driveCache) return of(this.driveCache);
-    return this.http.get<any[]>(`${this.baseUrl}/drives`).pipe(
+    return this.http.get<Drive[]>(`${this.baseUrl}/drives`).pipe(
       tap(data => this.driveCache = data)
     );
   }
 
-  getOwners(): Observable<any[]> {
+  getOwners(): Observable<Owner[]> {
     if (this.ownerCache) return of(this.ownerCache);
-    return this.http.get<any[]>(`${this.baseUrl}/owners`).pipe(
+    return this.http.get<Owner[]>(`${this.baseUrl}/owners`).pipe(
       tap(data => this.ownerCache = data)
     );
   }
 
-  getBodyTypes(): Observable<any[]> {
+  getBodyTypes(): Observable<BodyType[]> {
     if (this.bodyCache) return of(this.bodyCache);
-    return this.http.get<any[]>(`${this.baseUrl}/bodies`).pipe(
+    return this.http.get<BodyType[]>(`${this.baseUrl}/bodies`).pipe(
       tap(data => this.bodyCache = data)
     );
   }
 
-  getModels(): Observable<any[]> {
+  getModels(): Observable<Model[]> {
     if (this.modelCache) return of(this.modelCache);
-    return this.http.get<any[]>(`${this.baseUrl}/models`).pipe(
+    return this.http.get<Model[]>(`${this.baseUrl}/models`).pipe(
       tap(data => this.modelCache = data)
     );
   }
@@ -141,4 +166,3 @@ getCarById(carId: number): Observable<Car> {
     );
   }
 }
-

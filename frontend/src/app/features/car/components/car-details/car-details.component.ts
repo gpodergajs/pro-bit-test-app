@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Car, CarApiService } from '../../services/car-api.service';
 import { MatCardModule } from '@angular/material/card';
@@ -21,9 +21,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./car-details.component.scss']
 })
 export class CarDetailsComponent implements OnInit {
-  car!: Car;
+  private carApi = inject(CarApiService);
+  private route = inject(ActivatedRoute);
 
-  constructor(private carApi: CarApiService, private route: ActivatedRoute) {}
+  car!: Car;
 
   ngOnInit(): void {
     const carId = Number(this.route.snapshot.paramMap.get('id'));

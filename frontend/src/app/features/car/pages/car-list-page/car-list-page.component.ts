@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CarApiService, Car } from '../../services/car-api.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -31,6 +31,8 @@ import { PaginatorComponent } from '../../../../shared/components/paginator/pagi
   styleUrl: './car-list-page.component.scss'
 })
 export class CarListPageComponent implements OnInit {
+  private carApi = inject(CarApiService);
+
   cars$: Observable<Car[]> = of([]);
 
   isGridView = false;
@@ -53,8 +55,6 @@ export class CarListPageComponent implements OnInit {
   priceOptions = [5000, 10000, 15000, 20000, 30000, 50000];
   mileageOptions = [5000, 10000, 20000, 50000, 100000, 150000, 200000, 2500000];
   years: number[] = [];
-
-  constructor(private carApi: CarApiService) { }
 
   ngOnInit(): void {
     const currentYear = new Date().getFullYear();
@@ -95,7 +95,7 @@ export class CarListPageComponent implements OnInit {
     this.loadCars();
   }
 
-  onPageChange(event: any) {
+  onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadCars();

@@ -1,5 +1,5 @@
 import { Car } from "../../services/car-api.service";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -33,12 +33,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
   styleUrls: ['./car-data-view.component.scss']
 })
 export class CarDataViewComponent implements OnInit {
+  authService = inject(AuthService);
+  private breakpointObserver = inject(BreakpointObserver);
+
   @Input() cars: Car[] = [];
 
   isAdmin = false;
-
-
-  constructor(public authService: AuthService, private breakpointObserver: BreakpointObserver) {}
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();

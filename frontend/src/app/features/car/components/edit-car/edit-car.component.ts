@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Car, CarApiService } from '../../services/car-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -35,6 +35,11 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
   styleUrl: './edit-car.component.scss'
 })
 export class EditCarComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private carApi = inject(CarApiService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+
   car!: Car;
 
   models: { id: number; name: string }[] = [];
@@ -45,14 +50,6 @@ export class EditCarComponent implements OnInit {
   colors: string[] = ['Red', 'Blue', 'Black', 'White', 'Silver', 'Green'];
   saving = false;
 
-
-  constructor(
-    private route: ActivatedRoute,
-    private carApi: CarApiService,
-    private router: Router,
-    private snackBar: MatSnackBar
-  ) {}
-
   ngOnInit(): void {
     const carId = Number(this.route.snapshot.paramMap.get('id'));
     if (carId) {
@@ -61,7 +58,7 @@ export class EditCarComponent implements OnInit {
   }
 
   /** Compare function for object selects */
-  compareById(obj1: any, obj2: any): boolean {
+  compareById(obj1: HasId, obj2: HasId): boolean {
     return obj1 && obj2 ? obj1.id === obj2.id : obj1 === obj2;
   }
 
@@ -74,7 +71,7 @@ export class EditCarComponent implements OnInit {
       driveTypes: this.carApi.getDriveTypes().pipe(catchError(() => of([]))),
       owners: this.carApi.getOwners().pipe(catchError(() => of([])))
     }).subscribe({
-      next: (res: any) => {
+      next: (res: DropdownData) => {
         this.models = Array.isArray(res.models) ? res.models : res.models?.models ?? [];
         this.bodyTypes = Array.isArray(res.bodyTypes) ? res.bodyTypes : res.bodyTypes?.body_types ?? [];
         this.transmissionTypes = Array.isArray(res.transmissionTypes)

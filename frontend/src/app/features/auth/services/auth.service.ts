@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { UserType } from '../../../core/enum/user-type.enum';
@@ -11,11 +11,11 @@ export interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
+private http = inject(HttpClient);
+
 private readonly apiUrl = '/api/auth';
   private readonly tokenKey = 'auth_token';
-  private useLocalStorage = false; // default → sessionStorage
-
-  constructor(private http: HttpClient) {}
+  private useLocalStorage = false;
 
   /**
    * Logs in the user
@@ -93,7 +93,7 @@ private readonly apiUrl = '/api/auth';
   }
 
     /** Return decoded payload or null on error */
-  getTokenPayload(): any | null {
+  getTokenPayload(): TokenPayload | null {
     const token = this.getToken();
     if (!token) return null;
     const parts = token.split('.');

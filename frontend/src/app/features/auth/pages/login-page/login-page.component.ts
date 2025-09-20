@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
@@ -19,12 +19,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   standalone: true
 })
 export class LoginPageComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   username = '';
   password = '';
   loading = false;
   rememberMe = false;
-
-  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
      if (!this.username || !this.password) return;
