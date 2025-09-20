@@ -2,10 +2,9 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Location } from '@angular/common';
-import { UserType } from '../enum/user-type.enum';
 
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = () => {
  const authService = inject(AuthService);
   const router = inject(Router);
     const location = inject(Location);

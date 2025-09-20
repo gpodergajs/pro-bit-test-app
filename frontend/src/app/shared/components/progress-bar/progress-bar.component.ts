@@ -9,7 +9,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 })
 export class ProgressBarComponent {
  /** Value of the progress (0-100) */
-  @Input() value: number = 0;
+  @Input() value = 0;
 
   /** Optional color: primary, accent, warn */
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';

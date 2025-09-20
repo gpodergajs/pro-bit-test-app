@@ -13,7 +13,7 @@ export interface LoginResponse {
 export class AuthService {
 private readonly apiUrl = '/api/auth';
   private readonly tokenKey = 'auth_token';
-  private useLocalStorage: boolean = false; // default → sessionStorage
+  private useLocalStorage = false; // default → sessionStorage
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ private readonly apiUrl = '/api/auth';
    * @param password
    * @param rememberMe - if true, token is stored in localStorage
    */
-  login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
+  login(username: string, password: string, rememberMe = false): Observable<LoginResponse> {
     this.useLocalStorage = rememberMe; // set storage preference dynamically
     const url = `${this.apiUrl}/login`;
 

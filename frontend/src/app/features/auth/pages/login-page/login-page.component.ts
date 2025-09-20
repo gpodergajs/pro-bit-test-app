@@ -19,10 +19,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   standalone: true
 })
 export class LoginPageComponent {
-  username: string = '';
-  password: string = '';
-  loading: boolean = false;
-  rememberMe: boolean = false;
+  username = '';
+  password = '';
+  loading = false;
+  rememberMe = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 

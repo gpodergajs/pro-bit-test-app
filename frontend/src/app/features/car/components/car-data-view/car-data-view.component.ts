@@ -1,19 +1,17 @@
-import { PageEvent } from "@angular/material/paginator";
-import { Car, CarApiService } from "../../services/car-api.service";
-import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
+import { Car } from "../../services/car-api.service";
+import { Component, Input, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { PaginatorComponent } from "../../../../shared/components/paginator/paginator.component";
 import { MatCardModule } from "@angular/material/card";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { FormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "../../../auth/services/auth.service";
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 @Component({
@@ -37,7 +35,7 @@ import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
 export class CarDataViewComponent implements OnInit {
   @Input() cars: Car[] = [];
 
-  isAdmin: boolean = false;
+  isAdmin = false;
 
 
   constructor(public authService: AuthService, private breakpointObserver: BreakpointObserver) {}

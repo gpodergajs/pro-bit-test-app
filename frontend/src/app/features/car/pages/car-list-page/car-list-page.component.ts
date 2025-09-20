@@ -12,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-car-list-page',
@@ -34,7 +33,7 @@ import { MatIcon } from '@angular/material/icon';
 export class CarListPageComponent implements OnInit {
   cars$: Observable<Car[]> = of([]);
 
-  isGridView: boolean = false;
+  isGridView = false;
   // Pagination properties
   totalCars = 0;
   pageSize = 10;

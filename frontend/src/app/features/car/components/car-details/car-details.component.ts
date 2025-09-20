@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Car, CarApiService } from '../../services/car-api.service';
 import { MatCardModule } from '@angular/material/card';

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Car, CarApiService } from '../../services/car-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -34,16 +34,16 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
   templateUrl: './edit-car.component.html',
   styleUrl: './edit-car.component.scss'
 })
-export class EditCarComponent {
+export class EditCarComponent implements OnInit {
   car!: Car;
 
-  models: Array<{ id: number; name: string }> = [];
-  bodyTypes: Array<{ id: number; name: string }> = [];
-  transmissionTypes: Array<{ id: number; name: string }> = [];
-  driveTypes: Array<{ id: number; name: string }> = [];
-  owners: Array<{ id: number; username: string }> = [];
+  models: { id: number; name: string }[] = [];
+  bodyTypes: { id: number; name: string }[] = [];
+  transmissionTypes: { id: number; name: string }[] = [];
+  driveTypes: { id: number; name: string }[] = [];
+  owners: { id: number; username: string }[] = [];
   colors: string[] = ['Red', 'Blue', 'Black', 'White', 'Silver', 'Green'];
-  saving: boolean = false;
+  saving = false;
 
 
   constructor(

@@ -26,7 +26,7 @@ import {Location} from "@angular/common"
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent {
-  currentUrl: string = '/';
+  currentUrl = '/';
 
   constructor(
     private location: Location,
