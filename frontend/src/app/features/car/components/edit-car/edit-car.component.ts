@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { HasId, DropdownData } from '../../../../shared/interfaces/common.interface';
 import { Car, CarApiService } from '../../services/car-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';

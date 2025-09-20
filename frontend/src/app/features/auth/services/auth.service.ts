@@ -7,6 +7,12 @@ export interface LoginResponse {
   access_token: string; // JWT token returned by backend
 }
 
+export interface TokenPayload {
+  exp: number;
+  user_type_id?: number;
+  user_type?: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })

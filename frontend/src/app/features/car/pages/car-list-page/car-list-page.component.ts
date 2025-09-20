@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { CarApiService, Car } from '../../services/car-api.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';

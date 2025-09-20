@@ -4,21 +4,7 @@
   <mat-sidenav-content>
     
     <!-- Top navigation bar -->
-    <mat-toolbar color="primary" class="layout-header">
-      <!-- Back button -->
-      <button mat-icon-button *ngIf="showBackButton()" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-
-      <span class="app-title">My App</span>
-
-      <span class="spacer"></span>
-
-      <!-- Logout button -->
-      <button mat-icon-button *ngIf="showLogoutButton()" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-      </button>
-    </mat-toolbar>
+    <app-navbar></app-navbar>
 
     <!-- Main content -->
     <main class="layout-content">
@@ -26,9 +12,7 @@
     </main>
 
     <!-- Footer -->
-    <mat-toolbar color="accent" class="layout-footer">
-      <span>&copy; 2025 My Company</span>
-    </mat-toolbar>
+    <app-footer></app-footer>
 
   </mat-sidenav-content>
 </mat-sidenav-container>
