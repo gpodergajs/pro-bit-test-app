@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatSnackBarModule, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common'; // Import CommonModule for ngClass
+import { CommonModule } from '@angular/common';
 
 interface SnackbarData {
   message: string;
@@ -24,7 +24,7 @@ export class SnackbarComponent {
 
   constructor() {
     this.message = this.data.message || 'An unexpected error occurred.';
-    this.type = this.data.type || 'error'; // Default to error if type is not provided
+    this.type = this.data.type || 'error';
   }
 
   dismiss() {

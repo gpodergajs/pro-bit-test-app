@@ -22,7 +22,7 @@ export class MessageService {
   showError(error: HttpErrorResponse | Error | string, duration: number = 5000) {
     const errorMessage = this.errorHandlingService.getErrorMessage(error as HttpErrorResponse); 
     this.snackBar.openFromComponent(SnackbarComponent, {
-      data: { message: errorMessage, type: 'error' }, // Pass type
+      data: { message: errorMessage, type: 'error' },
       duration: duration,
       panelClass: ['error-snackbar'],
     });

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { HasId, DropdownData } from '../../../../shared/interfaces/common.interface';
-import { Car, CarApiService } from '../../services/car-api.service';
+import { HasId, DropdownData, Car } from '../../../../shared/interfaces/common.interface';
+import { CarApiService } from '../../services/car-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
-import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
+import { MessageService } from '../../../../core/services/message.service';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class EditCarComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private carApi = inject(CarApiService);
   private router = inject(Router);
-  private messageService = inject(MessageService); // Inject MessageService
+  private messageService = inject(MessageService);
 
   car!: Car;
 
@@ -97,7 +97,6 @@ export class EditCarComponent implements OnInit {
         this.driveTypes = Array.isArray(res.driveTypes) ? res.driveTypes : res.driveTypes?.drive_types ?? [];
         this.owners = Array.isArray(res.owners) ? res.owners : res.owners?.owners ?? [];
 
-        // After dropdowns are loaded, load the car
         this.loadCar(carId);
       },
       error: (err) => this.messageService.showError(err)

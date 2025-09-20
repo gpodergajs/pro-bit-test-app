@@ -1,68 +1,17 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { MessageService } from '../../../core/services/message.service'; // Import MessageService
-
-export interface Car {
-  id: number;
-  model: { id: number; name: string };
-  body_type: { id: number; name: string };
-  color: string;
-  doors: number;
-  drive_type: { id: number; name: string };
-  engine_type: { id: number; name: string };
-  engine_capacity: number;
-  fuel_consumption: number;
-  license_plate: string;
-  mileage: number;
-  owner: { id: number; username: string };
-  price: number;
-  registration_year: number;
-  transmission_type: { id: number; name: string };
-  vin: string;
-}
-
-export interface PaginatedCars {
-  cars: Car[];
-  page: number;
-  total_pages: number;
-  total_items: number;
-}
-
-export interface Transmission {
-  id: number;
-  name: string;
-}
-
-export interface Drive {
-  id: number;
-  name: string;
-}
-
-export interface Owner {
-  id: number;
-  username: string;
-}
-
-export interface BodyType {
-  id: number;
-  name: string;
-}
-
-export interface Model {
-  id: number;
-  name: string;
-}
+import { MessageService } from '../../../core/services/message.service';
+import { Car, PaginatedCars, Transmission, Drive, Owner, BodyType, Model } from '../../../shared/interfaces/common.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarApiService {
   private http = inject(HttpClient);
-  private messageService = inject(MessageService); // Inject MessageService
+  private messageService = inject(MessageService);
 
 
-  // Caches
   private transmissionCache: Transmission[] | null = null;
   private driveCache: Drive[] | null = null;
   private ownerCache: Owner[] | null = null;
@@ -138,8 +87,6 @@ getCarById(carId: number): Observable<Car> {
     const { id, ...carWithoutId } = car;
     return this.http.post<Car>(this.baseUrl, carWithoutId);
   }
-
-  /** Dropdown services with caching */
 
   getTransmissionTypes(): Observable<Transmission[]> {
     if (this.transmissionCache) return of(this.transmissionCache);

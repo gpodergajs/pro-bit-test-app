@@ -3,14 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { UserType } from '../enum/user-type.enum';
 import { ErrorHandlingService } from './error-handling.service';
 import { MessageService } from './message.service';
-
-// Removed LoginResponse interface
-
-export interface TokenPayload {
-  exp: number;
-  user_type_id?: number;
-  user_type?: number;
-}
+import { TokenPayload } from '../../shared/interfaces/common.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,17 +11,17 @@ export interface TokenPayload {
 export class AuthService {
   private http = inject(HttpClient);
   private errorHandlingService = inject(ErrorHandlingService);
-  private messageService = inject(MessageService); // Inject MessageService
+  private messageService = inject(MessageService);
 
   private readonly tokenKey = 'auth_token';
-  private useLocalStorage = false; // This will be managed by setUseLocalStorage
+  private useLocalStorage = false;
 
-  // New method to set storage preference
+  
   setUseLocalStorage(rememberMe: boolean) {
     this.useLocalStorage = rememberMe;
   }
 
-  // Made public for LoginService
+  
   setToken(token: string) {
     if (this.useLocalStorage) {
       localStorage.setItem(this.tokenKey, token);
@@ -60,7 +53,7 @@ export class AuthService {
       return true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      this.messageService.showError(error); // Use MessageService
+      this.messageService.showError(error);
       return false;
     }
   }
@@ -91,12 +84,11 @@ export class AuthService {
     if (parts.length < 2) return null;
     const payloadBase64 = parts[1];
     try {
-      // atob can throw if malformed
       const json = atob(payloadBase64);
       return JSON.parse(json);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      this.messageService.showError(error); // Use MessageService
+      this.messageService.showError(error);
       return null;
     }
   }

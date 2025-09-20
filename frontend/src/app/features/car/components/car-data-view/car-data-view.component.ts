@@ -1,4 +1,5 @@
-import { Car, CarApiService } from "../../services/car-api.service";
+import { CarApiService } from "../../services/car-api.service";
+import { Car } from "../../../../shared/interfaces/common.interface";
 import { Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";

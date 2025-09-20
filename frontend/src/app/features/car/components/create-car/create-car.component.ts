@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { HasId, DropdownData } from '../../../../shared/interfaces/common.interface';
-import { Car, CarApiService } from '../../services/car-api.service';
+import { HasId, DropdownData, Car } from '../../../../shared/interfaces/common.interface';
+import { CarApiService } from '../../services/car-api.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,7 @@ import { ProgressBarComponent } from '../../../../shared/components/progress-bar
 import { MessageService } from '../../../../core/services/message.service';
 
 @Component({
-  selector: 'app-create-car', // Changed selector
+  selector: 'app-create-car',
   imports: [
     CommonModule,
     FormsModule,
@@ -35,14 +35,13 @@ import { MessageService } from '../../../../core/services/message.service';
   templateUrl: './create-car.component.html',
   styleUrl: './create-car.component.scss'
 })
-export class CreateCarComponent implements OnInit { // Changed class name
-  // Removed private route = inject(ActivatedRoute);
+export class CreateCarComponent implements OnInit {
   private carApi = inject(CarApiService);
   private router = inject(Router);
   private messageService = inject(MessageService);
 
-  car: Car = { // Initialized new car object
-    id: 0, // Will be assigned by backend
+  car: Car = {
+    id: 0,
     model: { id: 0, name: '' },
     body_type: { id: 0, name: '' },
     color: '',
@@ -69,7 +68,7 @@ export class CreateCarComponent implements OnInit { // Changed class name
   saving = false;
 
   ngOnInit(): void {
-    this.loadDropdownsAndCar(); // Call without carId
+    this.loadDropdownsAndCar();
   }
 
   /** Compare function for object selects */
@@ -78,7 +77,7 @@ export class CreateCarComponent implements OnInit { // Changed class name
   }
 
   /** Load all dropdowns */
-  loadDropdownsAndCar() { // Removed carId parameter
+  loadDropdownsAndCar() {
     forkJoin({
       models: this.carApi.getModels().pipe(catchError((error: HttpErrorResponse) => {
         this.messageService.showError(error);

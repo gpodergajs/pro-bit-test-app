@@ -10,10 +10,8 @@ export class ErrorHandlingService {
 
    getErrorMessage(error: HttpErrorResponse): string {
     if (error.error instanceof ErrorEvent) {
-      // Client-side/network error
       return `Network error: ${error.error.message}`;
     } else {
-      // Backend returned an error response
       switch (error.status) {
         case 0:
           return 'Unable to connect to the server. Please try again later.';

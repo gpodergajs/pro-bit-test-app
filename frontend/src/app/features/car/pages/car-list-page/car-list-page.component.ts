@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { CarApiService, Car } from '../../services/car-api.service';
+import { CarApiService } from '../../services/car-api.service';
+import { Car, PaginatedCars } from '../../../../shared/interfaces/common.interface';
 import { BehaviorSubject, of } from 'rxjs';
 import { catchError, map, finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
-import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
+import { MessageService } from '../../../../core/services/message.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -41,20 +42,18 @@ export class CarListPageComponent implements OnInit {
   private carApi = inject(CarApiService);
   private fb = inject(FormBuilder);
   private router = inject(Router)
-  private messageService = inject(MessageService); // Inject MessageService
+  private messageService = inject(MessageService);
 
   private carsSubject = new BehaviorSubject<Car[]>([]);
   cars$ = this.carsSubject.asObservable();
 
   isGridView = false;
   loading = false;
-  // Pagination properties
   totalCars = 0;
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25, 50];
 
-  // Filters
   filterForm!: FormGroup;
 
   priceOptions = [5000, 10000, 15000, 20000, 30000, 50000];
@@ -73,7 +72,6 @@ export class CarListPageComponent implements OnInit {
       yearTo: [undefined]
     }, { validators: this.priceAndYearValidator });
 
-    // Load first page
     this.loadCars();
   }
 
@@ -88,7 +86,6 @@ export class CarListPageComponent implements OnInit {
     const yearFrom = yearFromControl?.value;
     const yearTo = yearToControl?.value;
 
-    // Price validation
     if (priceFrom !== null && priceFrom !== undefined && priceFrom !== '' &&
         priceTo !== null && priceTo !== undefined && priceTo !== '') {
       if (priceFrom >= priceTo) {
@@ -97,7 +94,7 @@ export class CarListPageComponent implements OnInit {
         priceToControl?.setErrors(null);
       }
     } else {
-      priceToControl?.setErrors(null); // Clear error if one or both are empty
+      priceToControl?.setErrors(null);
     }
 
     // Year validation
@@ -109,7 +106,7 @@ export class CarListPageComponent implements OnInit {
         yearToControl?.setErrors(null);
       }
     } else {
-      yearToControl?.setErrors(null); // Clear error if one or both are empty
+      yearToControl?.setErrors(null);
     }
 
     return null;
@@ -137,7 +134,7 @@ export class CarListPageComponent implements OnInit {
     if (this.filterForm.invalid) {
       return;
     }
-    this.pageIndex = 0; // Reset to first page when filters change
+    this.pageIndex = 0;
     this.loadCars();
     
   }

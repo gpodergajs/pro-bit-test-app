@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Car, CarApiService } from '../../services/car-api.service';
+import { CarApiService } from '../../services/car-api.service';
+import { Car } from '../../../../shared/interfaces/common.interface';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
