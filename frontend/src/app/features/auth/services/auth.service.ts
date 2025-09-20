@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { UserType } from '../../../core/enum/user-type.enum';
 
 export interface LoginResponse {
   access_token: string; // JWT token returned by backend
@@ -10,8 +11,9 @@ export interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-    private readonly apiUrl = '/api/auth'; // Remove http://localhost:5000
-  private tokenKey = 'auth_token';
+private readonly apiUrl = '/api/auth';
+  private readonly tokenKey = 'auth_token';
+  private useLocalStorage: boolean = false; // default → sessionStorage
 
   constructor(private http: HttpClient) {}
 
@@ -19,14 +21,15 @@ export class AuthService {
    * Logs in the user
    * @param username
    * @param password
-   * @returns Observable<LoginResponse>
+   * @param rememberMe - if true, token is stored in localStorage
    */
-  login(username: string, password: string): Observable<LoginResponse> {
+  login(username: string, password: string, rememberMe: boolean = false): Observable<LoginResponse> {
+    this.useLocalStorage = rememberMe; // set storage preference dynamically
     const url = `${this.apiUrl}/login`;
+
     return this.http.post<LoginResponse>(url, { username, password }).pipe(
       tap((res) => this.setToken(res.access_token)),
       catchError((error) => {
-        // optionally log it
         console.error('Login failed:', error);
         return throwError(() => error);
       })
@@ -34,25 +37,27 @@ export class AuthService {
   }
 
   /**
-   * Save JWT token to localStorage
-   * @param token
+   * Save JWT token
    */
   private setToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
+    if (this.useLocalStorage) {
+      localStorage.setItem(this.tokenKey, token);
+    } else {
+      sessionStorage.setItem(this.tokenKey, token);
+    }
   }
 
   /**
-   * Get JWT token from localStorage
+   * Get JWT token
    */
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return localStorage.getItem(this.tokenKey) || sessionStorage.getItem(this.tokenKey);
   }
 
   /**
    * Check if user is logged in
    */
   isLoggedIn(): boolean {
-    console.log('Checking login status...');
     const token = this.getToken();
     if (!token) return false;
 
@@ -61,7 +66,6 @@ export class AuthService {
 
     try {
       const payload = JSON.parse(atob(payloadBase64));
-      // Optional: check token expiration
       if (payload.exp && Date.now() >= payload.exp * 1000) return false;
       return true;
     } catch (e) {
@@ -75,6 +79,7 @@ export class AuthService {
    */
   logout() {
     localStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.tokenKey);
   }
 
   /**
@@ -85,6 +90,40 @@ export class AuthService {
     return new HttpHeaders({
       Authorization: token ? `Bearer ${token}` : '',
     });
+  }
+
+    /** Return decoded payload or null on error */
+  getTokenPayload(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const payloadBase64 = parts[1];
+    try {
+      // atob can throw if malformed
+      const json = atob(payloadBase64);
+      return JSON.parse(json);
+    } catch (e) {
+      console.error('Failed to decode token payload', e);
+      return null;
+    }
+  }
+
+  /** Return numeric user_type_id or null */
+  getUserTypeId(): number | null {
+    const payload = this.getTokenPayload();
+    if (!payload) return null;
+    const raw = payload.user_type_id ?? payload.user_type ?? null;
+    if (raw == null) return null;
+    const num = Number(raw);
+    return Number.isNaN(num) ? null : num;
+  }
+
+  /** Convenience check */
+  isAdmin(): boolean {
+    const id = this.getUserTypeId();
+
+    return id === UserType.Admin;
   }
 
 

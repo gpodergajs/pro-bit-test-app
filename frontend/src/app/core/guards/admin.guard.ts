@@ -24,10 +24,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   }
 
   try {
-    const payload = JSON.parse(atob(payloadBase64));
-    console.log('Token payload:', payload);
-    // Block if user_type_id === "2"
-    if (payload.user_type_id && payload.user_type_id !== UserType.Admin) {
+    if (!authService.isAdmin()) {
       alert('You are not allowed to access this page.');
       location.back(); // go back to the previous page
       return false;
