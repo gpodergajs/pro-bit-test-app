@@ -21,6 +21,9 @@
           <input matInput type="password" name="password" [(ngModel)]="password" required />
           <mat-error *ngIf="loginForm.submitted && !password">Password is required</mat-error>
         </mat-form-field>
+        <mat-checkbox [(ngModel)]="rememberMe" name="rememberMe">
+          Remember me
+        </mat-checkbox>
 
         <button mat-raised-button color="primary" type="submit" class="full-width">
           Login

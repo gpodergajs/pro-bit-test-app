@@ -8,10 +8,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
+
 
 @Component({
   selector: 'app-login-page',
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, ProgressBarComponent],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, ProgressBarComponent, MatCheckboxModule  ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
   standalone: true
@@ -20,32 +22,25 @@ export class LoginPageComponent {
   username: string = '';
   password: string = '';
   loading: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
-    if (!this.username || !this.password) return;
+     if (!this.username || !this.password) return;
 
-    this.loading = true;
+  this.loading = true;
 
-    this.authService.login(this.username, this.password).subscribe({
-      next: () => {
-        this.loading = false;
-        alert('Login successful!');
-        this.router.navigate(['/cars']);
-      },
-      error: (err) => {
-        this.loading = false;
-
-        // Provide a friendly message based on HTTP status
-        if (err.status === 401) {
-          alert('Invalid username or password.');
-        } else if (err.status === 0) {
-          alert('Cannot reach server. Check your connection.');
-        } else {
-          alert('Login failed: ' + (err.error?.message || err.message));
-        }
-      },
-    });
-  }
+  this.authService.login(this.username, this.password, this.rememberMe).subscribe({
+    next: () => {
+      this.loading = false;
+      alert('Login successful!');
+      this.router.navigate(['/cars']);
+    },
+    error: (err) => {
+      this.loading = false;
+      alert('Login failed: ' + (err.error?.message || err.message));
+    },
+  });
+}
 }
