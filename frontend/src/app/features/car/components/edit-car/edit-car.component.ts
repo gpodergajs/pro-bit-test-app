@@ -97,7 +97,6 @@ export class EditCarComponent implements OnInit {
 
  saveCar() {
     if (!this.car) return;
-
     this.saving = true;
     this.carApi.updateCar(this.car.id, this.car).subscribe({
       next: () => {

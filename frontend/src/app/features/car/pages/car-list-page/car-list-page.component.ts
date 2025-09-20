@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { CarApiService, Car } from '../../services/car-api.service';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { catchError, map, finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { CarDataViewComponent } from '../../components/car-data-view/car-data-view.component';
@@ -38,7 +38,8 @@ export class CarListPageComponent implements OnInit {
   private carApi = inject(CarApiService);
   private fb = inject(FormBuilder);
 
-  cars$: Observable<Car[]> = of([]);
+  private carsSubject = new BehaviorSubject<Car[]>([]);
+  cars$ = this.carsSubject.asObservable();
 
   isGridView = false;
   loading = false;
@@ -111,7 +112,7 @@ export class CarListPageComponent implements OnInit {
 
   loadCars() {
     this.loading = true;
-    this.cars$ = this.carApi.getCars(this.pageIndex + 1, this.pageSize, this.filterForm.value).pipe(
+    this.carApi.getCars(this.pageIndex + 1, this.pageSize, this.filterForm.value).pipe(
       map(response => {
         this.totalCars = response.total_items; // Update totalCars for paginator
         return response.cars;
@@ -121,7 +122,7 @@ export class CarListPageComponent implements OnInit {
         return of([]);
       }),
       finalize(() => this.loading = false)
-    );
+    ).subscribe(cars => this.carsSubject.next(cars));
   }
 
   applyFilter() {
@@ -150,7 +151,9 @@ export class CarListPageComponent implements OnInit {
      this.carApi.deleteCar(carId).subscribe(success => {
     if (success) {
       console.log(`Car ${carId} deleted`);
-      this.loadCars(); // refresh list
+      const currentCars = this.carsSubject.getValue();
+      const updatedCars = currentCars.filter(car => car.id !== carId);
+      this.carsSubject.next(updatedCars);
     } else {
       console.error('Failed to delete car');
     }
