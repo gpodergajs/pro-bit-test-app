@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 
 export interface Car {
   id: number;
@@ -107,6 +107,13 @@ export class CarApiService {
   return this.http.get<PaginatedCars>(this.baseUrl, { params });
 }
 
+
+ deleteCar(carId: number): Observable<boolean> {
+  return this.http.delete(`/api/cars/${carId}`, { observe: 'response' }).pipe(
+    map(response => response.status === 200),
+    catchError(() => of(false))               
+  );
+}
 
   /**
  * Get a single car by ID

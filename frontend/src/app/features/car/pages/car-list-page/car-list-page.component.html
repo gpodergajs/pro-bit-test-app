@@ -73,11 +73,9 @@
     </app-paginator>
   </div>
 
-  <<app-progress-bar *ngIf="loading" mode="indeterminate" color="primary"></app-progress-bar>
+  <app-progress-bar *ngIf="loading" mode="indeterminate" color="primary"></app-progress-bar>
 
-  <!-- Car list -->
   <ng-container *ngIf="cars$ | async as cars">
-    <app-car-data-view [cars]="cars"></app-car-data-view>
+    <app-car-data-view [cars]="cars" (deleteCar)="handleCarDelete($event)"></app-car-data-view>
   </ng-container>
-
 </div>

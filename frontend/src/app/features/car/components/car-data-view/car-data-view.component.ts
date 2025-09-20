@@ -1,5 +1,5 @@
-import { Car } from "../../services/car-api.service";
-import { Component, Input, OnInit, inject } from "@angular/core";
+import { Car, CarApiService } from "../../services/car-api.service";
+import { Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -8,9 +8,8 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatCardModule } from "@angular/material/card";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../../auth/services/auth.service";
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 
 
@@ -34,9 +33,11 @@ import { MatGridListModule } from '@angular/material/grid-list';
 })
 export class CarDataViewComponent implements OnInit {
   authService = inject(AuthService);
-  private breakpointObserver = inject(BreakpointObserver);
+  carService = inject(CarApiService)
+  router = inject(Router)
 
   @Input() cars: Car[] = [];
+  @Output() deleteCar = new EventEmitter<number>(); 
 
   isAdmin = false;
 
@@ -44,5 +45,12 @@ export class CarDataViewComponent implements OnInit {
     this.isAdmin = this.authService.isAdmin();
   }
 
+  goToDetails(id: number) {
+    this.router.navigate(['/cars', id]);
+  }
+
+  onCarDelete(id:number) {
+    this.deleteCar.emit(id)
+  }
   
 }

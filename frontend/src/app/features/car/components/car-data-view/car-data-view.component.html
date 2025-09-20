@@ -1,7 +1,7 @@
 <div class="car-data-view-container">
   <div class="car-list">
     <ng-container *ngFor="let car of cars">
-      <mat-card class="car-card" appearance="outlined">
+      <mat-card class="car-card" appearance="outlined" (click)="goToDetails(car.id)"  >
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title>{{ car.model.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
@@ -19,18 +19,19 @@
         </mat-card-content>
 
         <mat-card-actions>
-          <button 
-            mat-button 
-            color="warn" 
-            *ngIf="isAdmin" 
-            [routerLink]="['/cars/edit', car.id]">
-            Edit Car
-          </button>
-
           <!-- Always visible -->
           <button mat-button color="primary" [routerLink]="['/cars', car.id]">
             View Details
           </button>
+          <button 
+            mat-button 
+            color="warn" 
+            *ngIf="isAdmin" 
+            [routerLink]="['/cars/edit', car.id]"
+            (click)="$event.stopPropagation()">
+            Edit Car
+          </button>
+          <button mat-button color="warn" *ngIf="isAdmin" (click)="onCarDelete(car.id); $event.stopPropagation()"> Delete car </button>
         </mat-card-actions>
       </mat-card>
     </ng-container>

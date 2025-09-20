@@ -146,6 +146,17 @@ export class CarListPageComponent implements OnInit {
   }
 
 
+  handleCarDelete(carId:number) {
+     this.carApi.deleteCar(carId).subscribe(success => {
+    if (success) {
+      console.log(`Car ${carId} deleted`);
+      this.loadCars(); // refresh list
+    } else {
+      console.error('Failed to delete car');
+    }
+  });
+  }
+
 
 }
 
