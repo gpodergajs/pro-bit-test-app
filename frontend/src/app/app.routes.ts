@@ -10,15 +10,34 @@ import { adminGuard } from './core/guards/admin.guard';
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent, // layout wraps everything
+    component: LayoutComponent,
     children: [
-      { path: 'cars', component: CarListPageComponent },
-      { path: 'cars/:id', component: CarDetailsComponent, canActivate: [authGuard] }, // Route with car ID
-      { path: 'cars/:id/edit', component: EditCarComponent, canActivate: [authGuard, adminGuard] }, // Route for editing car
-      { path: 'login', component: LoginPageComponent }
-      /*{ path: 'cars' },
-      { path: 'cars/:id', component: CarDetailComponent },
-      { path: 'login', component: LoginComponent },*/
+      {
+        path: 'cars',
+        loadComponent: () =>
+          import('./features/car/pages/car-list-page/car-list-page.component')
+            .then((m) => m.CarListPageComponent),
+      },
+      {
+        path: 'cars/:id',
+        loadComponent: () =>
+          import('./features/car/components/car-details/car-details.component')
+            .then((m) => m.CarDetailsComponent),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'cars/edit/:id',
+        loadComponent: () =>
+          import('./features/car/components/edit-car/edit-car.component')
+            .then((m) => m.EditCarComponent),
+        canActivate: [authGuard, adminGuard],
+      },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/pages/login-page/login-page.component')
+            .then((m) => m.LoginPageComponent),
+      },
     ],
   },
 ];
