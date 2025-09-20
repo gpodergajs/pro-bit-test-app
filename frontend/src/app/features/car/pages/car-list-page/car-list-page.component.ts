@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { MessageService } from '../../../../core/services/message.service'; // Import MessageService
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-car-list-page',
@@ -39,6 +40,7 @@ import { MessageService } from '../../../../core/services/message.service'; // I
 export class CarListPageComponent implements OnInit {
   private carApi = inject(CarApiService);
   private fb = inject(FormBuilder);
+  private router = inject(Router)
   private messageService = inject(MessageService); // Inject MessageService
 
   private carsSubject = new BehaviorSubject<Car[]>([]);
@@ -171,6 +173,9 @@ export class CarListPageComponent implements OnInit {
     });
   }
 
+  onCreateCar() {
+    this.router.navigate(['/cars/create']);
+  }
 
 }
 

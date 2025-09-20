@@ -134,6 +134,11 @@ getCarById(carId: number): Observable<Car> {
   return this.http.put<Car>(`/api/cars/${carId}`, car);
 }
 
+  createCar(car: Car): Observable<Car> {
+    const { id, ...carWithoutId } = car;
+    return this.http.post<Car>(this.baseUrl, carWithoutId);
+  }
+
   /** Dropdown services with caching */
 
   getTransmissionTypes(): Observable<Transmission[]> {

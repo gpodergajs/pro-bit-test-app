@@ -15,11 +15,11 @@ export const routes: Routes = [
             .then((m) => m.CarListPageComponent),
       },
       {
-        path: 'cars/:id',
+        path: 'cars/create',
         loadComponent: () =>
-          import('./features/car/components/car-details/car-details.component')
-            .then((m) => m.CarDetailsComponent),
-        canActivate: [],
+          import('./features/car/components/create-car/create-car.component')
+            .then((m) => m.CreateCarComponent),
+        canActivate: [authGuard, adminGuard],
       },
       {
         path: 'cars/edit/:id',
@@ -27,6 +27,13 @@ export const routes: Routes = [
           import('./features/car/components/edit-car/edit-car.component')
             .then((m) => m.EditCarComponent),
         canActivate: [authGuard, adminGuard],
+      },
+      {
+        path: 'cars/:id',
+        loadComponent: () =>
+          import('./features/car/components/car-details/car-details.component')
+            .then((m) => m.CarDetailsComponent),
+        canActivate: [],
       },
       {
         path: 'login',

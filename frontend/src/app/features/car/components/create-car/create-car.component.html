@@ -1,0 +1,106 @@
+<div class="car-data-view-container">
+  <mat-card class="car-card" appearance="outlined">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>Create New Car</mat-card-title>
+      <!-- Removed subtitle -->
+    </mat-card-header>
+
+    <img mat-card-image [src]="'https://www.tms.si/wp-content/uploads/2020/12/141492.jpg'" [alt]="car.model.name" class="main-car-image">
+
+    <mat-card-content>
+      <div class="specs-grid">
+
+        <!-- Model -->
+        <mat-form-field appearance="outline">
+          <mat-label>Model</mat-label>
+          <mat-select [(ngModel)]="car.model" [compareWith]="compareById">
+            <mat-option *ngFor="let m of models" [value]="m">{{ m.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Body Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Body Type</mat-label>
+          <mat-select [(ngModel)]="car.body_type" [compareWith]="compareById">
+            <mat-option *ngFor="let b of bodyTypes" [value]="b">{{ b.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Transmission -->
+        <mat-form-field appearance="outline">
+          <mat-label>Transmission</mat-label>
+          <mat-select [(ngModel)]="car.transmission_type" [compareWith]="compareById">
+            <mat-option *ngFor="let t of transmissionTypes" [value]="t">{{ t.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Drive Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Drive Type</mat-label>
+          <mat-select [(ngModel)]="car.drive_type" [compareWith]="compareById">
+            <mat-option *ngFor="let d of driveTypes" [value]="d">{{ d.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Owner -->
+        <mat-form-field appearance="outline">
+          <mat-label>Owner</mat-label>
+          <mat-select [(ngModel)]="car.owner" [compareWith]="compareById">
+            <mat-option *ngFor="let o of owners" [value]="o">{{ o.username }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Color -->
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <mat-select [(ngModel)]="car.color">
+            <mat-option *ngFor="let c of colors" [value]="c">{{ c }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Numeric & Text Inputs -->
+        <mat-form-field appearance="outline">
+          <mat-label>Mileage</mat-label>
+          <input matInput type="number" [(ngModel)]="car.mileage" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Doors</mat-label>
+          <input matInput type="number" [(ngModel)]="car.doors" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Engine Capacity</mat-label>
+          <input matInput type="number" step="0.1" [(ngModel)]="car.engine_capacity" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fuel Consumption</mat-label>
+          <input matInput type="number" step="0.1" [(ngModel)]="car.fuel_consumption" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>License Plate</mat-label>
+          <input matInput [(ngModel)]="car.license_plate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>VIN</mat-label>
+          <input matInput [(ngModel)]="car.vin" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Year</mat-label>
+          <input matInput type="number" [(ngModel)]="car.registration_year" />
+        </mat-form-field>
+        <app-progress-bar *ngIf="saving" mode="indeterminate" color="primary"></app-progress-bar>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="saveCar()">Create Car</button>
+      <button mat-raised-button color="warn" routerLink="/cars">Cancel</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
