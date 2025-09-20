@@ -1,0 +1,34 @@
+<div class="login-container">
+  <mat-card class="login-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+        <app-progress-bar *ngIf="loading" mode="indeterminate" color="primary"></app-progress-bar>
+
+    <mat-card-content>
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <!-- Username -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" name="username" [(ngModel)]="username" required />
+          <mat-error *ngIf="loginForm.submitted && !username">Username is required</mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" [(ngModel)]="password" required />
+          <mat-error *ngIf="loginForm.submitted && !password">Password is required</mat-error>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="rememberMe" name="rememberMe">
+          Remember me
+        </mat-checkbox>
+
+        <button mat-raised-button color="primary" type="submit" class="full-width">
+          Login
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

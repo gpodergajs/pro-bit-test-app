@@ -1,0 +1,40 @@
+.car-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;   // center the row
+  gap: 1.5rem;               // spacing between cards
+  width: 100%;
+  padding: 1rem;
+}
+
+.car-card {
+  flex: 0 0 300px;           // fixed width (as before)
+  max-width: 300px;          // prevent stretching
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.car-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Medium screens: 2 per row */
+@media (max-width: 1024px) {
+  .car-card {
+    flex: 0 0 45%;       // shrink to 2 per row
+    max-width: 45%;
+  }
+}
+
+/* Small screens: 1 per row */
+@media (max-width: 600px) {
+  .car-card {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

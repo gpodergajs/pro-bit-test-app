@@ -1,23 +1,52 @@
-from typing import Tuple, Any
+from typing import Dict, Tuple, Any
 from app import db
-from app.models.car import Car
+from app.models.car import Car, BodyType, DriveType, EngineType, TransmissionType
 from app.dto.car.car_create_dto import CarCreateDTO
 from app.dto.car.car_update_dto import CarUpdateDTO
+from app.models.car.car_model import CarModel
+from app.models.user.user import User
 
 class CarService:
+    
     @staticmethod
-    def get_all_cars(page: int = 1, per_page: int = 10) -> Tuple[Any, int]:
+    def get_all_cars(
+        page: int = 1,
+        per_page: int = 10,
+        filters: Dict[str, Any] = None
+    ) -> Tuple[Any, int]:
         """
-        Get all cars with pagination.
+        Get all cars with pagination and optional filters.
+        Filters can include:
+        - price_from
+        - price_to
+        - mileage_to
+        - year_from
+        - year_to
         Returns a dict with pagination data and Car objects.
         """
-        paginated = Car.query.paginate(page=page, per_page=per_page, error_out=False)
+        query = Car.query  # Start with base query
+
+        if filters:
+            if "price_from" in filters and filters["price_from"] is not None:
+                query = query.filter(Car.price >= filters["price_from"])
+            if "price_to" in filters and filters["price_to"] is not None:
+                query = query.filter(Car.price <= filters["price_to"])
+            if "mileage_to" in filters and filters["mileage_to"] is not None:
+                query = query.filter(Car.mileage <= filters["mileage_to"])
+            if "year_from" in filters and filters["year_from"] is not None:
+                query = query.filter(Car.registration_year >= filters["year_from"])
+            if "year_to" in filters and filters["year_to"] is not None:
+                query = query.filter(Car.registration_year <= filters["year_to"])
+
+        paginated = query.paginate(page=page, per_page=per_page, error_out=False)
+
         return {
-            "items": paginated.items,      # list of Car objects
-            "page": page,
+            "items": paginated.items,
+            "page": paginated.page,
             "total_pages": paginated.pages,
-            "total_items": paginated.total,
+            "total_items": paginated.total
         }, 200
+
 
     @staticmethod
     def get_car_by_id(car_id: int) -> Tuple[Any, int]:
@@ -73,3 +102,33 @@ class CarService:
         except Exception as e:
             db.session.rollback()
             return {"error": str(e)}, 500
+
+    @staticmethod
+    def get_owners():
+        owners = User.query.all()  # query the User table directly
+        return [{"id": o.id, "username": o.username} for o in owners], 200
+
+    @staticmethod
+    def get_models():
+        models = CarModel.query.all()  # query the CarModel table directly
+        return [{"id": m.id, "name": m.name} for m in models], 200
+
+    @staticmethod
+    def get_body_types():
+        body_types = BodyType.query.all()
+        return [{"id": b.id, "name": b.name} for b in body_types], 200
+
+    @staticmethod
+    def get_transmission_types():
+        transmissions = TransmissionType.query.all()
+        return [{"id": t.id, "name": t.name} for t in transmissions], 200
+
+    @staticmethod
+    def get_drive_types():
+        drives = DriveType.query.all()
+        return [{"id": d.id, "name": d.name} for d in drives], 200
+
+    @staticmethod
+    def get_engine_types():
+        engines = EngineType.query.all()
+        return [{"id": e.id, "name": e.name} for e in engines], 200

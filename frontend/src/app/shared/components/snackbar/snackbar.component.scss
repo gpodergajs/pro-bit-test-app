@@ -1,0 +1,18 @@
+.snackbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .message {
+    margin-right: 16px;
+  }
+}
+
+.snackbar-container.error {
+  // Styles for error type, if needed beyond panelClass
+}
+
+.snackbar-container.success {
+  // Styles for success type, if needed beyond panelClass
+}

@@ -1,0 +1,82 @@
+<div class="car-data-view-container">
+
+  <!-- Sticky Filter + Paginator -->
+  <div class="car-filter-sticky-header">
+    <form [formGroup]="filterForm" class="car-filter-bar">
+      <!-- Price From -->
+      <mat-form-field appearance="outline">
+        <mat-label>Price From</mat-label>
+        <mat-select formControlName="priceFrom">
+          <mat-option *ngFor="let price of priceOptions" [value]="price">
+            {{ price | currency:'USD' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Price To -->
+      <mat-form-field appearance="outline">
+        <mat-label>Price To</mat-label>
+        <mat-select formControlName="priceTo">
+          <mat-option *ngFor="let price of priceOptions" [value]="price">
+            {{ price | currency:'USD' }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="filterForm.get('priceTo')?.hasError('priceToLessThanPriceFrom')">
+          Price To must be greater than Price From
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Mileage To -->
+      <mat-form-field appearance="outline">
+        <mat-label>Mileage To (km)</mat-label>
+        <mat-select formControlName="mileageTo">
+          <mat-option *ngFor="let m of mileageOptions" [value]="m">
+            {{ m | number }} km
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Year From -->
+      <mat-form-field appearance="outline">
+        <mat-label>Year From</mat-label>
+        <mat-select formControlName="yearFrom">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Year To -->
+      <mat-form-field appearance="outline">
+        <mat-label>Year To</mat-label>
+        <mat-select formControlName="yearTo">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="filterForm.get('yearTo')?.hasError('yearToLessThanYearFrom')">
+          Year To must be greater than Year From
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Buttons -->
+      <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+      <button mat-raised-button (click)="clearFilter()">Clear</button>
+      <button mat-raised-button (click)="onCreateCar()">New car</button>
+    </form>
+
+    <!-- Sticky Paginator -->
+    <app-paginator
+      [length]="totalCars"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)">
+    </app-paginator>
+  </div>
+
+  <app-progress-bar *ngIf="loading" mode="indeterminate" color="primary"></app-progress-bar>
+
+  <ng-container *ngIf="cars$ | async as cars">
+    <app-car-data-view [cars]="cars" (deleteCar)="handleCarDelete($event)"></app-car-data-view>
+  </ng-container>
+</div>

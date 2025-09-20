@@ -1,0 +1,24 @@
+.layout-container {
+  height: 100vh;
+}
+
+.layout-content {
+  padding: 16px;
+  min-height: calc(100vh - 128px); // toolbar + footer heights
+}
+
+
+.spacer {
+  flex: 1 1 auto;
+}
+.layout-header {
+  position: sticky;   // makes it stick when scrolling
+  top: 0;             // stick to the top
+  z-index: 1000;      // ensure it’s above other content
+}
+
+.layout-footer {
+  position: sticky;   // optional: stick footer if you want
+  bottom: 0;
+  z-index: 1000;
+}
