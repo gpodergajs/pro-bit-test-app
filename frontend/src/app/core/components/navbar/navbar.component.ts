@@ -1,6 +1,6 @@
 import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs";
-import { AuthService } from "../../../features/auth/services/auth.service";
+import { AuthService } from "../../services/auth.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";

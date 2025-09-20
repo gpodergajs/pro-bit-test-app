@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { LoginService } from '../../services/login.service'; // Updated import
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,7 +20,7 @@ import { ErrorHandlingService } from '../../../../core/services/error-handling.s
   standalone: true
 })
 export class LoginPageComponent {
-  private authService = inject(AuthService);
+  private loginService = inject(LoginService); // Updated injection
   private router = inject(Router);
   private errorHandlingService = inject(ErrorHandlingService);
 
@@ -34,7 +34,7 @@ export class LoginPageComponent {
 
   this.loading = true;
 
-  this.authService.login(this.username, this.password, this.rememberMe).subscribe({
+  this.loginService.login(this.username, this.password, this.rememberMe).subscribe({ // Updated method call
     next: () => {
       this.loading = false;
       this.router.navigate(['/cars']);

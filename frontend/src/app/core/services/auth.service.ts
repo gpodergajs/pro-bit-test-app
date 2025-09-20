@@ -1,12 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
-import { UserType } from '../../../core/enum/user-type.enum';
-import { ErrorHandlingService } from '../../../core/services/error-handling.service';
+import { Observable, tap, throwError } from 'rxjs'; // Removed catchError
+import { UserType } from '../enum/user-type.enum';
+import { ErrorHandlingService } from './error-handling.service';
 
-export interface LoginResponse {
-  access_token: string; // JWT token returned by backend
-}
+// Removed LoginResponse interface
 
 export interface TokenPayload {
   exp: number;
@@ -18,38 +16,19 @@ export interface TokenPayload {
   providedIn: 'root',
 })
 export class AuthService {
-private http = inject(HttpClient);
-private errorHandlingService = inject(ErrorHandlingService);
+  private http = inject(HttpClient);
+  private errorHandlingService = inject(ErrorHandlingService);
 
-private readonly apiUrl = '/api/auth';
   private readonly tokenKey = 'auth_token';
-  private useLocalStorage = false;
+  private useLocalStorage = false; // This will be managed by setUseLocalStorage
 
-  /**
-   * Logs in the user
-   * @param username
-   * @param password
-   * @param rememberMe - if true, token is stored in localStorage
-   */
-  login(username: string, password: string, rememberMe = false): Observable<LoginResponse> {
-    this.useLocalStorage = rememberMe; // set storage preference dynamically
-    const url = `${this.apiUrl}/login`;
-
-    return this.http.post<LoginResponse>(url, { username, password }).pipe(
-      tap((res) => this.setToken(res.access_token)),
-      catchError((error: HttpErrorResponse) => {
-        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
-        return throwError(() => error);
-      })
-    );
+  // New method to set storage preference
+  setUseLocalStorage(rememberMe: boolean) {
+    this.useLocalStorage = rememberMe;
   }
 
-  
-
-  /**
-   * Save JWT token
-   */
-  private setToken(token: string) {
+  // Made public for LoginService
+  setToken(token: string) {
     if (this.useLocalStorage) {
       localStorage.setItem(this.tokenKey, token);
     } else {
@@ -137,6 +116,4 @@ private readonly apiUrl = '/api/auth';
 
     return id === UserType.Admin;
   }
-
-
 }
