@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { CarApiService, Car } from '../../services/car-api.service';
 import { Observable, of } from 'rxjs';
-import { catchError, map, finalize, delay } from 'rxjs/operators';
+import { catchError, map, finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { CarDataViewComponent } from '../../components/car-data-view/car-data-view.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
