@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { CarApiService, Car } from '../../services/car-api.service';
 import { BehaviorSubject, of } from 'rxjs';
 import { catchError, map, finalize } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CarDataViewComponent } from '../../components/car-data-view/car-data-view.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -119,7 +120,8 @@ export class CarListPageComponent implements OnInit {
         this.totalCars = response.total_items; // Update totalCars for paginator
         return response.cars;
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
+        console.log(err)
         this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(err));
         return of([]);
       }),

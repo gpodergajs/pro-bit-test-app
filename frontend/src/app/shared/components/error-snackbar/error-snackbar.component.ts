@@ -1,5 +1,5 @@
-import { Component, Input, inject } from '@angular/core';
-import { MatSnackBarModule, MatSnackBarRef } from '@angular/material/snack-bar';
+import { Component, inject } from '@angular/core';
+import { MatSnackBarModule, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -10,9 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './error-snackbar.component.scss',
 })
 export class ErrorSnackbarComponent {
-  @Input() message = 'An unexpected error occurred.';
+  message: string;
 
   snackBarRef = inject(MatSnackBarRef);
+  private data = inject(MAT_SNACK_BAR_DATA);
+
+  constructor() {
+    this.message = this.data.message || 'An unexpected error occurred.';
+  }
 
   dismiss() {
     this.snackBarRef.dismiss();

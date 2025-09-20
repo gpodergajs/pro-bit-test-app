@@ -5,6 +5,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NavbarComponent } from "../navbar/navbar.component";
 import { FooterComponent } from "../footer/footer.component";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-layout',
@@ -15,7 +16,8 @@ import { FooterComponent } from "../footer/footer.component";
     MatToolbarModule,
     MatSidenavModule,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    MatSnackBarModule
   ],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']

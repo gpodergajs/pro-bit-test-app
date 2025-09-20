@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
 
@@ -66,11 +67,26 @@ export class EditCarComponent implements OnInit {
   /** Load all dropdowns first, then the car */
   loadDropdownsAndCar(carId: number) {
     forkJoin({
-      models: this.carApi.getModels().pipe(catchError(() => of([]))),
-      bodyTypes: this.carApi.getBodyTypes().pipe(catchError(() => of([]))),
-      transmissionTypes: this.carApi.getTransmissionTypes().pipe(catchError(() => of([]))),
-      driveTypes: this.carApi.getDriveTypes().pipe(catchError(() => of([]))),
-      owners: this.carApi.getOwners().pipe(catchError(() => of([])))
+      models: this.carApi.getModels().pipe(catchError((error: HttpErrorResponse) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        return of([]);
+      })),
+      bodyTypes: this.carApi.getBodyTypes().pipe(catchError((error: HttpErrorResponse) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        return of([]);
+      })),
+      transmissionTypes: this.carApi.getTransmissionTypes().pipe(catchError((error: HttpErrorResponse) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        return of([]);
+      })),
+      driveTypes: this.carApi.getDriveTypes().pipe(catchError((error: HttpErrorResponse) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        return of([]);
+      })),
+      owners: this.carApi.getOwners().pipe(catchError((error: HttpErrorResponse) => {
+        this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
+        return of([]);
+      }))
     }).subscribe({
       next: (res: DropdownData) => {
         this.models = Array.isArray(res.models) ? res.models : res.models?.models ?? [];

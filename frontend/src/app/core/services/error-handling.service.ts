@@ -17,22 +17,28 @@ export class ErrorHandlingService {
     });
   }
 
-  getErrorMessage(error: HttpErrorResponse | Error | string): string {
-    console.log(error)
-    if (error instanceof HttpErrorResponse) {
-      if (error.error && error.error.message) {
-        return error.error.message;
-      } else if (error.message) {
-        return error.message;
-      } else {
-        return 'An HTTP error occurred.';
-      }
-    } else if (error instanceof Error) {
-      return error.message;
-    } else if (typeof error === 'string') {
-      return error;
+   getErrorMessage(error: HttpErrorResponse): string {
+    if (error.error instanceof ErrorEvent) {
+      // Client-side/network error
+      return `Network error: ${error.error.message}`;
     } else {
-      return 'An unexpected error occurred.';
+      // Backend returned an error response
+      switch (error.status) {
+        case 0:
+          return 'Unable to connect to the server. Please try again later.';
+        case 400:
+          return error.error?.message || 'Invalid request. Please check your input.';
+        case 401:
+          return 'Unauthorized. Please log in again.';
+        case 403:
+          return 'You do not have permission to perform this action.';
+        case 404:
+          return 'Resource not found.';
+        case 500:
+          return 'Server error. Please try again later.';
+        default:
+          return error.error?.message || `Unexpected error (code: ${error.status}).`;
+      }
     }
   }
 }

@@ -38,8 +38,6 @@ private readonly apiUrl = '/api/auth';
     return this.http.post<LoginResponse>(url, { username, password }).pipe(
       tap((res) => this.setToken(res.access_token)),
       catchError((error: HttpErrorResponse) => {
-        console.log(error)
-        console.log(this.errorHandlingService.getErrorMessage(error))
         this.errorHandlingService.showError(this.errorHandlingService.getErrorMessage(error));
         return throwError(() => error);
       })
