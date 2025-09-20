@@ -21,17 +21,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./car-details.component.scss']
 })
 export class CarDetailsComponent implements OnInit {
-  carId!: number;
   car!: Car;
 
   constructor(private carApi: CarApiService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.carId = Number(this.route.snapshot.paramMap.get('id'));
-      const carId = Number(this.route.snapshot.paramMap.get('id'));
-    console.log('Fetching details for car ID:', this.carId);
-    this.carApi.getCarById(this.carId).subscribe((car: Car) => {
+    const carId = Number(this.route.snapshot.paramMap.get('id'));
+    this.carApi.getCarById(carId).subscribe((car: Car) => {
       this.car = car;
     });
   }
+  
 }
