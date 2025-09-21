@@ -1,9 +1,7 @@
 from typing import Dict, Tuple, Any
-from app import db
-from ..models import Car, BodyType, DriveType, EngineType, TransmissionType, CarModel
 from ..dtos import CarCreateDTO, CarUpdateDTO
-from app.users.models import User
 from app.common.logger import get_logger
+from ..repositories.repository import CarRepository
 
 logger = get_logger(__name__)
 
@@ -25,28 +23,9 @@ class CarService:
         - year_to
         Returns a dict with pagination data and Car objects.
         """
-        query = Car.query  # Start with base query
-
-        if filters:
-            if "price_from" in filters and filters["price_from"] is not None:
-                query = query.filter(Car.price >= filters["price_from"])
-            if "price_to" in filters and filters["price_to"] is not None:
-                query = query.filter(Car.price <= filters["price_to"])
-            if "mileage_to" in filters and filters["mileage_to"] is not None:
-                query = query.filter(Car.mileage <= filters["mileage_to"])
-            if "year_from" in filters and filters["year_from"] is not None:
-                query = query.filter(Car.registration_year >= filters["year_from"])
-            if "year_to" in filters and filters["year_to"] is not None:
-                query = query.filter(Car.registration_year <= filters["year_to"])
-
-        paginated = query.paginate(page=page, per_page=per_page, error_out=False)
-
-        return {
-            "items": paginated.items,
-            "page": paginated.page,
-            "total_pages": paginated.pages,
-            "total_items": paginated.total
-        }, 200
+        logger.info(f"Fetching all cars with page={page}, per_page={per_page}, filters={filters}")
+        cars_data = CarRepository.get_all_cars(page, per_page, filters)
+        return cars_data, 200
 
 
     @staticmethod
@@ -54,8 +33,10 @@ class CarService:
         """
         Get a car by its ID.
         """
-        car = Car.query.get(car_id)
+        logger.info(f"Fetching car with ID: {car_id}")
+        car = CarRepository.get_car_by_id(car_id)
         if not car:
+            logger.warning(f"Car with ID {car_id} not found.")
             return {"error": "Car not found"}, 404
         return car, 200
 
@@ -65,18 +46,17 @@ class CarService:
         """
         Delete a car by its ID.
         """
-        car = Car.query.get(car_id)
+        logger.info(f"Attempting to delete car with ID: {car_id}")
+        car = CarRepository.get_car_by_id(car_id)
         if not car:
             logger.warning(f"Car with ID {car_id} not found for deletion.")
             return {"error": "Car not found"}, 404
 
         try:
-            db.session.delete(car)
-            db.session.commit()
+            CarRepository.delete_car(car)
             logger.info(f"Car with ID {car_id} deleted successfully.")
             return {"message": "Car deleted"}, 200
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error deleting car with ID {car_id}: {e}")
             return {"error": str(e)}, 500
 
@@ -84,62 +64,61 @@ class CarService:
     def create_car(dto: CarCreateDTO):
         logger.info(f"Attempting to create car with data: {dto.model_dump()}")
         try:
-            car = Car(**dto.model_dump())  # unpack DTO into Car ORM
-            db.session.add(car)
-            db.session.commit()
+            car = CarRepository.create_car(dto.model_dump())
             logger.info(f"Car created successfully with ID: {car.id}")
             return car, 201
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error creating car: {e}")
             return {"error": str(e)}, 500
 
     @staticmethod
     def update_car(car_id: int, dto: CarUpdateDTO):
-        car = Car.query.get(car_id)
+        car = CarRepository.get_car_by_id(car_id)
         if not car:
             logger.warning(f"Car with ID {car_id} not found for update.")
             return {"error": "Car not found"}, 404
 
         logger.info(f"Attempting to update car with ID {car_id} with data: {dto.model_dump(exclude_unset=True)}")
         try:
-            for key, value in dto.model_dump(exclude_unset=True).items():
-                setattr(car, key, value)  # update only provided fields
-
-            db.session.commit()
+            updated_car = CarRepository.update_car(car, dto.model_dump(exclude_unset=True))
             logger.info(f"Car with ID {car_id} updated successfully.")
-            return car, 200
+            return updated_car, 200
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error updating car with ID {car_id}: {e}")
             return {"error": str(e)}, 500
 
     @staticmethod
     def get_owners():
-        owners = User.query.all()  # query the User table directly
+        logger.info("Fetching all car owners.")
+        owners = CarRepository.get_owners()
         return [{"id": o.id, "username": o.username} for o in owners], 200
 
     @staticmethod
     def get_models():
-        models = CarModel.query.all()  # query the CarModel table directly
+        logger.info("Fetching all car models.")
+        models = CarRepository.get_models()
         return [{"id": m.id, "name": m.name} for m in models], 200
 
     @staticmethod
     def get_body_types():
-        body_types = BodyType.query.all()
+        logger.info("Fetching all body types.")
+        body_types = CarRepository.get_body_types()
         return [{"id": b.id, "name": b.name} for b in body_types], 200
 
     @staticmethod
     def get_transmission_types():
-        transmissions = TransmissionType.query.all()
+        logger.info("Fetching all transmission types.")
+        transmissions = CarRepository.get_transmission_types()
         return [{"id": t.id, "name": t.name} for t in transmissions], 200
 
     @staticmethod
     def get_drive_types():
-        drives = DriveType.query.all()
+        logger.info("Fetching all drive types.")
+        drives = CarRepository.get_drive_types()
         return [{"id": d.id, "name": d.name} for d in drives], 200
 
     @staticmethod
     def get_engine_types():
-        engines = EngineType.query.all()
+        logger.info("Fetching all engine types.")
+        engines = CarRepository.get_engine_types()
         return [{"id": e.id, "name": e.name} for e in engines], 200

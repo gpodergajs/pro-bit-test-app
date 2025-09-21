@@ -21,7 +21,6 @@ def create_app():
 
     # Configure logging
     logger = get_logger(__name__)
-    logger.setLevel(logging.INFO)
     app.logger = logger
     jwt.init_app(app)
 
