@@ -18,4 +18,4 @@ EXPOSE 5000
 
 # Stage 6: Command to run the application using Gunicorn
 # This is more robust for production than Flask's built-in server.
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--reload", "run:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--reload", "wsgi:app"]

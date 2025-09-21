@@ -25,6 +25,19 @@ services:
     networks:
       - car-app-network
 
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/dist/frontend/browser:/usr/share/nginx/html
+    depends_on:
+      - backend
+    networks:
+      - car-app-network
+
   db:
     image: mysql:8.0
     environment:
