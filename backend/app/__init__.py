@@ -12,7 +12,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
 
-def create_app():
+def create_app(*args, **kwargs):
     """
     An application factory, which creates and configures the Flask application.
 
