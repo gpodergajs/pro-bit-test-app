@@ -127,6 +127,22 @@ To completely reset the database, run `./run.sh reset-db`.
 ## Workflow 2: Fully-Containerized Development (for Consistency)
 **Use this to guarantee your code runs in an identical environment to your teammates and CI/CD pipelines.** All commands are run via the script, which executes them inside the Docker container.
 
+### Running with Nginx and Frontend Build
+This setup uses Nginx to serve the frontend and proxy requests to the backend. The frontend is automatically built as part of the Nginx Docker image.
+
+1.  **Build and Start All Services:**
+    This command builds the frontend, backend, and Nginx services, and starts them.
+    ```bash
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+    ```
+    The frontend will be accessible via Nginx, and the backend will be running with `debugpy` enabled, waiting for a debugger to attach.
+
+2.  **Access the Application:**
+    Once all services are up, you can access the application in your browser at `http://localhost`.
+
+3.  **Attach the Debugger (VS Code):**
+    If you want to debug the backend, go to the "Run and Debug" view in VS Code (Ctrl+Shift+D), select the "Python: Attach to Docker" configuration, and click the "Start Debugging" button.
+
 ### Daily Workflow
 **Step 1: Start All Containers**
 This builds and starts all services, including the backend.
