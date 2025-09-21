@@ -31,6 +31,7 @@ class CarService:
         """
         logger.info(f"Fetching all cars with page={page}, per_page={per_page}, filters={filters}")
         paginated_result = CarRepository.get_all_cars(page, per_page, filters)
+        logger.info(f"Successfully fetched {len(paginated_result.items)} cars for page {page}.")
         return paginated_result
 
 
@@ -44,6 +45,7 @@ class CarService:
         if not car:
             logger.warning(f"Car with ID {car_id} not found.")
             raise CarNotFoundException(f"Car with ID {car_id} not found")
+        logger.info(f"Successfully fetched car with ID: {car_id}.")
         return car
 
 
@@ -97,34 +99,40 @@ class CarService:
     def get_owners() -> List[User]:
         logger.info("Fetching all car owners.")
         owners = CarRepository.get_owners()
+        logger.info(f"Successfully fetched {len(owners)} car owners.")
         return owners
 
     @staticmethod
     def get_models() -> List[CarModel]:
         logger.info("Fetching all car models.")
         models = CarRepository.get_models()
+        logger.info(f"Successfully fetched {len(models)} car models.")
         return models
 
     @staticmethod
     def get_body_types() -> List[BodyType]:
         logger.info("Fetching all body types.")
         body_types = CarRepository.get_body_types()
+        logger.info(f"Successfully fetched {len(body_types)} body types.")
         return body_types
 
     @staticmethod
     def get_transmission_types() -> List[TransmissionType]:
         logger.info("Fetching all transmission types.")
         transmissions = CarRepository.get_transmission_types()
+        logger.info(f"Successfully fetched {len(transmissions)} transmission types.")
         return transmissions
 
     @staticmethod
     def get_drive_types() -> List[DriveType]:
         logger.info("Fetching all drive types.")
         drives = CarRepository.get_drive_types()
+        logger.info(f"Successfully fetched {len(drives)} drive types.")
         return drives
 
     @staticmethod
     def get_engine_types() -> List[EngineType]:
         logger.info("Fetching all engine types.")
         engines = CarRepository.get_engine_types()
+        logger.info(f"Successfully fetched {len(engines)} engine types.")
         return engines
