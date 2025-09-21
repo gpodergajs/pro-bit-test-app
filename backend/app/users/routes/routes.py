@@ -1,23 +1,33 @@
-from flask import Blueprint, request, jsonify
-from ..services import UserService
+from flask import Blueprint, request, jsonify, Response
+from ..services import UserService, UserAlreadyExistsException, InvalidCredentialsException
 
 users_bp = Blueprint("users", __name__)
 
 @users_bp.route("/register", methods=["POST"])
-def register():
+def register() -> Response:
     data = request.get_json()
-    response, status = UserService.register(
-        username=data["username"],
-        email=data["email"],
-        password=data["password"]
-    )
-    return jsonify(response), status
+    try:
+        user = UserService.register(
+            username=data["username"],
+            email=data["email"],
+            password=data["password"]
+        )
+        return jsonify({"message": "User registered successfully", "user_id": user.id}), 201
+    except UserAlreadyExistsException as e:
+        return jsonify({"error": str(e)}), 409
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @users_bp.route("/login", methods=["POST"])
-def login():
+def login() -> Response:
     data = request.get_json()
-    response, status = UserService.login(
-        username=data["username"],
-        password=data["password"]
-    )
-    return jsonify(response), status
+    try:
+        access_token = UserService.login(
+            username=data["username"],
+            password=data["password"]
+        )
+        return jsonify({"access_token": access_token}), 200
+    except InvalidCredentialsException as e:
+        return jsonify({"error": str(e)}), 401
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

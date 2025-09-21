@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from .car_model_dto import CarModelDTO
 from app.users.dtos import UserDTO
 from .body_type_dto import BodyTypeDTO
@@ -27,5 +27,4 @@ class CarReadDTO(BaseModel):
     registration_year: Optional[int] = None
     price: Optional[float] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
