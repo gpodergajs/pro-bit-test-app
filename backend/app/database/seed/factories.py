@@ -6,11 +6,11 @@ from app import db
 import random
 
 # Import your models
-from app.models.car import Car, CarBrand, CarModel, EngineType, TransmissionType, BodyType, DriveType
-from app.models.user import User, UserType
+from app.cars.models import Car, CarBrand, CarModel, EngineType, TransmissionType, BodyType, DriveType
+from app.users.models import User, UserType
 from werkzeug.security import generate_password_hash
 
-from app.enum.user_type_enum import UserTypeEnum
+from app.common.enums.user_type_enum import UserTypeEnum
 
 fake = Faker()
 

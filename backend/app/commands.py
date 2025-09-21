@@ -2,9 +2,12 @@ import click
 from flask.cli import with_appcontext
 from app import db
 from app.database.seed.factories import CarFactory, UserFactory
-from app.models.car import Car, EngineType, TransmissionType, BodyType, DriveType
-from app.models.user import  UserType
-from app.enum.user_type_enum import UserTypeEnum
+
+from app.common.enums.user_type_enum import UserTypeEnum
+from app.cars.models import Car, BodyType, EngineType, TransmissionType, DriveType
+from app.users.models import UserType
+
+
 
 @click.command(name="seed_db")
 @with_appcontext

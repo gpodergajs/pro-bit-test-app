@@ -23,11 +23,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from .routes.car_route import car_bp
-    from .routes.auth_route import auth_bp
+    from .cars.routes import car_bp
+    from .users.routes import users_bp
 
     app.register_blueprint(car_bp, url_prefix='/api/cars')
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(users_bp, url_prefix='/api/users')
 
     # --- Import Commands and Create DB ---
     with app.app_context():
