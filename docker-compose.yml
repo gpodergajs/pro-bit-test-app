@@ -1,8 +1,24 @@
-# /docker-compose.yml (Corrected for healthcheck)
 version: '3.8'
 
 services:
-
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: cardb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - car-app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -10,58 +26,32 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - DB_HOST=db
-      - DB_NAME=cardb
-      - DB_USER=user
-      - DB_PASSWORD=password
-      - DB_TYPE=mysql
-      - DB_PORT=3306
-    volumes:
-      - ./backend:/app
-    # MODIFICATION HERE: Wait for the db to be healthy
+      DB_HOST: db
+      DB_NAME: cardb
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_TYPE: mysql
+      DB_PORT: 3306
     depends_on:
       db:
         condition: service_healthy
     networks:
       - car-app-network
 
-  nginx:
+  frontend:
     build:
-      context: ./nginx
-      dockerfile: Dockerfile.nginx
+      context: .
+      dockerfile: frontend/Dockerfile.frontend
     ports:
       - "80:80"
-    volumes:
-      - ./frontend/dist/frontend/browser:/usr/share/nginx/html
     depends_on:
       - backend
     networks:
       - car-app-network
 
-  db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_DATABASE=cardb
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
-      - MYSQL_ROOT_PASSWORD=rootpassword # This is used by the healthcheck
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - car-app-network
-    # MODIFICATION HERE: Add the healthcheck
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+volumes:
+  mysql-data:
 
 networks:
   car-app-network:
     driver: bridge
-
-volumes:
-  mysql-data:
-  mssql-data: # This can be left here, it's unused if mssql is commented out

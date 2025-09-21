@@ -37,6 +37,7 @@ export class LoginPageComponent {
   this.loginService.login(this.username, this.password, this.rememberMe).subscribe({ // Updated method call
     next: () => {
       this.loading = false;
+      console.log('Navigating to /cars');
       this.router.navigate(['/cars']);
     },
     error: (err) => {
