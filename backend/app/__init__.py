@@ -25,7 +25,7 @@ def create_app():
 
     # Configure logging
     logger = get_logger(__name__)
-    app.logger.setLevel(logging.INFO)   # 👈 ensure Flask logger also at INFO
+    app.logger.setLevel(logging.INFO) 
     app.logger = logger
     
     jwt.init_app(app)

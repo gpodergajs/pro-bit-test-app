@@ -65,7 +65,7 @@ class UserFactory(BaseFactory):
             **kwargs: Additional keyword arguments.
         """
         # Ensure the object has an ID
-         if obj.id:
+        if obj.id:
             if obj.user_type.id == UserTypeEnum.ADMIN.value:
                 obj.username = f"admin{obj.id}"
                 obj.set_password("adminPassword")  # hashed

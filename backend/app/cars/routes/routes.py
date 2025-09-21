@@ -13,7 +13,7 @@ from app.users.dtos.user_dto import UserDTO
 car_bp = Blueprint("car", __name__)
 
 
-@car_bp.route("/", methods=["GET", "OPTIONS"])
+@car_bp.route("/", methods=["GET"])
 def list_cars() -> Response:
     """
     Retrieves a paginated list of cars based on query parameters.

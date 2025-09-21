@@ -10,3 +10,4 @@ def get_logger(name: str) -> logging.Logger:
     Returns:
         logging.Logger: A logger instance.
     """
+    return logging.getLogger(name)
