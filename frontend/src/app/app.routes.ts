@@ -8,6 +8,11 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
+       {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      },
       {
         path: 'cars',
         loadComponent: () =>
@@ -19,7 +24,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/car/components/create-car/create-car.component')
             .then((m) => m.CreateCarComponent),
-        canActivate: [authGuard, adminGuard],
+        canActivate: [authGuard],
       },
       {
         path: 'cars/edit/:id',

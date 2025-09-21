@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { MessageService } from '../../../core/services/message.service';
-import { Car, PaginatedCars, Transmission, Drive, Owner, BodyType, Model } from '../../../shared/interfaces/common.interface';
+import { Car, PaginatedCars, Transmission, Drive, Owner, BodyType, Model, CarUpdatePayload } from '../../../shared/interfaces/common.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -80,12 +80,45 @@ getCarById(carId: number): Observable<Car> {
   }
 
   updateCar(carId: number, car: Car): Observable<Car> {
-  return this.http.put<Car>(`/api/cars/${carId}`, car);
-}
+    const payload: CarUpdatePayload = {
+      vin: car.vin,
+      license_plate: car.license_plate,
+      model_id: car.model.id,
+      owner_id: car.owner.id,
+      body_type_id: car.body_type.id,
+      engine_type_id: car.engine_type.id,
+      transmission_type_id: car.transmission_type.id,
+      drive_type_id: car.drive_type.id,
+      engine_capacity: car.engine_capacity,
+      fuel_consumption: car.fuel_consumption,
+      mileage: car.mileage,
+      color: car.color,
+      doors: car.doors,
+      registration_year: car.registration_year,
+      price: car.price,
+    };
+    return this.http.put<Car>(`/api/cars/${carId}`, payload);
+  }
 
   createCar(car: Car): Observable<Car> {
-    const { id, ...carWithoutId } = car;
-    return this.http.post<Car>(this.baseUrl, carWithoutId);
+    const payload: CarUpdatePayload = {
+      vin: car.vin,
+      license_plate: car.license_plate,
+      model_id: car.model.id,
+      owner_id: car.owner.id,
+      body_type_id: car.body_type.id,
+      engine_type_id: car.engine_type.id,
+      transmission_type_id: car.transmission_type.id,
+      drive_type_id: car.drive_type.id,
+      engine_capacity: car.engine_capacity,
+      fuel_consumption: car.fuel_consumption,
+      mileage: car.mileage,
+      color: car.color,
+      doors: car.doors,
+      registration_year: car.registration_year,
+      price: car.price,
+    };
+    return this.http.post<Car>(this.baseUrl, payload);
   }
 
   getTransmissionTypes(): Observable<Transmission[]> {
@@ -121,6 +154,10 @@ getCarById(carId: number): Observable<Car> {
     return this.http.get<Model[]>(`${this.baseUrl}/models`).pipe(
       tap(data => this.modelCache = data)
     );
+  }
+
+  getEngineTypes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/engines`);
   }
 
   getColors(): Observable<string[]> {

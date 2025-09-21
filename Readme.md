@@ -102,6 +102,10 @@ flask run
 ```
 Your API is now running on `http://localhost:5000`.
 
+**Default Login Credentials:**
+*   **Username:** `admin1`
+*   **Password:** `adminPassword`
+
 **Note:** In this Hybrid Development workflow, the Angular frontend is *not* automatically built or served. You will run the Angular development server (`ng serve`) directly on your machine, which provides features like live-reloading.
 
 **Step 3: Run the Angular App**
@@ -119,6 +123,9 @@ ng serve --proxy-config proxy.conf.json
 Your frontend will be accessible on `http://localhost:4200` (or another port if 4200 is in use).
 
 **Step 4: Manage the Database (Locally)**
+
+**Important:** The first time you run the application, you'll need to seed the database to populate it with initial data (e.g., admin user, car brands). Run `./run.sh seed` from the project root (or `flask seed_db` from `backend/` with `venv` active) after applying migrations.
+
 When you change a model, run these commands from the `backend/` directory (with your `venv` active).
 ```bash
 # Generate a new migration
@@ -155,10 +162,17 @@ To completely reset the database, run `./run.sh reset-db`.
 2.  **Access the Application:**
     Once all services are up, you can access the application in your browser at `http://localhost`.
 
+    **Default Login Credentials:**
+    *   **Username:** `admin1`
+    *   **Password:** `adminPassword`
+
 3.  **Attach the Debugger (VS Code):**
     If you want to debug the backend, go to the "Run and Debug" view in VS Code (Ctrl+Shift+D), select the "Python: Attach to Docker" configuration, and click the "Start Debugging" button.
 
 4.  **Manage the Database (via Script):**
+
+    **Important:** The first time you run the application, you'll need to seed the database to populate it with initial data (e.g., admin user, car brands). Run `./run.sh seed` after applying migrations.
+
     When you change a model, open a **new terminal** and use the `run.sh` script.
     ```bash
     # Generate a new migration script

@@ -3,7 +3,7 @@ import { HasId, DropdownData, Car } from '../../../../shared/interfaces/common.i
 import { CarApiService } from '../../services/car-api.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +22,7 @@ import { MessageService } from '../../../../core/services/message.service';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -39,36 +40,38 @@ export class CreateCarComponent implements OnInit {
   private carApi = inject(CarApiService);
   private router = inject(Router);
   private messageService = inject(MessageService);
+  private fb = inject(FormBuilder);
 
-  car: Car = {
-    id: 0,
-    model: { id: 0, name: '' },
-    body_type: { id: 0, name: '' },
-    color: '',
-    doors: 2,
-    drive_type: { id: 0, name: '' },
-    engine_type: { id: 0, name: '' },
-    engine_capacity: 0,
-    fuel_consumption: 0,
-    license_plate: '',
-    mileage: 0,
-    owner: { id: 0, username: '' },
-    price: 0,
-    registration_year: new Date().getFullYear(),
-    transmission_type: { id: 0, name: '' },
-    vin: ''
-  };
+  carForm!: FormGroup;
 
   models: { id: number; name: string }[] = [];
   bodyTypes: { id: number; name: string }[] = [];
   transmissionTypes: { id: number; name: string }[] = [];
   driveTypes: { id: number; name: string }[] = [];
+  engineTypes: { id: number; name: string }[] = [];
   owners: { id: number; username: string }[] = [];
   colors: string[] = ['Red', 'Blue', 'Black', 'White', 'Silver', 'Green'];
   saving = false;
 
   ngOnInit(): void {
     this.loadDropdownsAndCar();
+    this.carForm = this.fb.group({
+      model: [null, Validators.required],
+      body_type: [null, Validators.required],
+      transmission_type: [null, Validators.required],
+      drive_type: [null, Validators.required],
+      engine_type: [null, Validators.required],
+      owner: [null, Validators.required],
+      color: ['', Validators.required],
+      mileage: [0, [Validators.required, Validators.min(1)]],
+      doors: [0, [Validators.required, Validators.min(1)]],
+      engine_capacity: [0, [Validators.required, Validators.min(0.1)]],
+      fuel_consumption: [0, [Validators.required, Validators.min(0.1)]],
+      license_plate: ['', Validators.required],
+      vin: ['', Validators.required],
+      registration_year: [new Date().getFullYear(), [Validators.required, Validators.min(1900)]],
+      price: [0, [Validators.required, Validators.min(1)]]
+    });
   }
 
   /** Compare function for object selects */
@@ -95,6 +98,10 @@ export class CreateCarComponent implements OnInit {
         this.messageService.showError(error);
         return of([]);
       })),
+      engineTypes: this.carApi.getEngineTypes().pipe(catchError((error: HttpErrorResponse) => {
+        this.messageService.showError(error);
+        return of([]);
+      })),
       owners: this.carApi.getOwners().pipe(catchError((error: HttpErrorResponse) => {
         this.messageService.showError(error);
         return of([]);
@@ -107,6 +114,7 @@ export class CreateCarComponent implements OnInit {
           ? res.transmissionTypes
           : res.transmissionTypes?.transmission_types ?? [];
         this.driveTypes = Array.isArray(res.driveTypes) ? res.driveTypes : res.driveTypes?.drive_types ?? [];
+        this.engineTypes = Array.isArray(res.engineTypes) ? res.engineTypes : res.engineTypes?.engine_types ?? [];
         this.owners = Array.isArray(res.owners) ? res.owners : res.owners?.owners ?? [];
       },
       error: (err) => this.messageService.showError(err)
@@ -114,9 +122,12 @@ export class CreateCarComponent implements OnInit {
   }
 
   saveCar() {
-    if (!this.car) return;
+    if (this.carForm.invalid) {
+      this.messageService.showError('Please fill in all required fields.');
+      return;
+    }
     this.saving = true;
-    this.carApi.createCar(this.car).subscribe({ 
+    this.carApi.createCar(this.carForm.value).subscribe({ 
       next: () => {
         this.saving = false;
         this.messageService.showSuccess('Car created successfully!'); 

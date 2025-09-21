@@ -24,9 +24,12 @@ def create_app(*args, **kwargs):
     app.config.from_object(Config)
 
     # Configure logging
-    logger = get_logger(__name__)
-    app.logger.setLevel(logging.INFO) 
-    app.logger = logger
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    app.logger.handlers.clear()
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
     
     jwt.init_app(app)
 

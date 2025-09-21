@@ -15,6 +15,7 @@ export interface DropdownData {
   bodyTypes: HasIdAndName[] | { body_types: HasIdAndName[] };
   transmissionTypes: HasIdAndName[] | { transmission_types: HasIdAndName[] };
   driveTypes: HasIdAndName[] | { drive_types: HasIdAndName[] };
+  engineTypes: HasIdAndName[] | { engine_types: HasIdAndName[] };
   owners: Owner[] | { owners: Owner[] };
 }
 
@@ -45,6 +46,24 @@ export interface Car {
   registration_year: number;
   transmission_type: { id: number; name: string };
   vin: string;
+}
+
+export interface CarUpdatePayload {
+  vin?: string;
+  license_plate?: string;
+  model_id?: number;
+  owner_id?: number;
+  body_type_id?: number;
+  engine_type_id?: number;
+  transmission_type_id?: number;
+  drive_type_id?: number;
+  engine_capacity?: number;
+  fuel_consumption?: number;
+  mileage?: number;
+  color?: string;
+  doors?: number;
+  registration_year?: number;
+  price?: number;
 }
 
 export interface PaginatedCars {

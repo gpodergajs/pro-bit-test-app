@@ -62,7 +62,7 @@
       <!-- Buttons -->
       <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
       <button mat-raised-button (click)="clearFilter()">Clear</button>
-      <button mat-raised-button (click)="onCreateCar()">New car</button>
+      <button mat-raised-button (click)="onCreateCar()" *ngIf="isAdmin()">New car</button>
     </form>
 
     <!-- Sticky Paginator -->
