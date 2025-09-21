@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from pydantic import ValidationError
 
 from app.common.decorators.auth import role_required
+from app.common.enums.user_type_enum import UserTypeEnum
 from ..dtos import CarCreateDTO, CarUpdateDTO, CarReadDTO, TransmissionTypeDTO, DriveTypeDTO, BodyTypeDTO, EngineTypeDTO, CarModelDTO
 from app.common.dtos.pagination_dto import PaginatedResult
 from ..services import CarService, CarNotFoundException
@@ -12,11 +13,20 @@ from app.users.dtos.user_dto import UserDTO
 car_bp = Blueprint("car", __name__)
 
 
-# Get all cars
-# Get all cars with optional filters
 @car_bp.route("/", methods=["GET", "OPTIONS"])
 def list_cars() -> Response:
-    # Pagination
+    """
+    Retrieves a paginated list of cars based on query parameters.
+
+    Query Parameters:
+        page (int): The page number for pagination (default: 1).
+        per_page (int): The number of items per page (default: 10).
+        price_from (float): Minimum price for filtering.
+        price_to (float): Maximum price for filtering.
+        mileage_to (float): Maximum mileage for filtering.
+        year_from (int): Minimum manufacturing year for filtering.
+        year_to (int): Maximum manufacturing year for filtering.
+    """
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
 
@@ -52,9 +62,14 @@ def list_cars() -> Response:
         return jsonify({"error": str(e)}), 500
 
 
-# Get car by ID
 @car_bp.route("/<int:car_id>", methods=["GET"])
-def get_car(car_id) -> Response:
+def get_car(car_id: int) -> Response:
+    """
+    Retrieves a single car by its ID.
+
+    Args:
+        car_id (int): The unique identifier of the car.
+    """
     try:
         car = CarService.get_car_by_id(car_id)
         car_dto = CarReadDTO.model_validate(car)
@@ -65,10 +80,15 @@ def get_car(car_id) -> Response:
         return jsonify({"error": str(e)}), 500
 
 
-# Create car
 @car_bp.route("/", methods=["POST"])
 @jwt_required()
 def add_car() -> Response:
+    """
+    Adds a new car to the database.
+
+    Request Body:
+        CarCreateDTO: The car data to be created.
+    """
     data = request.get_json()
     try:
         dto = CarCreateDTO(**data)
@@ -80,10 +100,19 @@ def add_car() -> Response:
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Update car
 @car_bp.route("/<int:car_id>", methods=["PUT"])
-#@jwt_required()
-def edit_car(car_id) -> Response:
+@jwt_required()
+@role_required(UserTypeEnum.ADMIN)
+def edit_car(car_id: int) -> Response:
+    """
+    Updates an existing car by its ID.
+
+    Args:
+        car_id (int): The unique identifier of the car to update.
+
+    Request Body:
+        CarUpdateDTO: The car data to be updated.
+    """
     data = request.get_json()
     try:
         dto = CarUpdateDTO(**data)
@@ -98,11 +127,16 @@ def edit_car(car_id) -> Response:
         return jsonify({"error": str(e)}), 500
 
 
-# Delete car
 @car_bp.route("/<int:car_id>", methods=["DELETE"])
 @jwt_required()
-@role_required("admin")
-def remove_car(car_id) -> Response:
+@role_required(UserTypeEnum.ADMIN)
+def remove_car(car_id: int) -> Response:
+    """
+    Deletes a car by its ID.
+
+    Args:
+        car_id (int): The unique identifier of the car to delete.
+    """
     try:
         CarService.delete_car(car_id)
         return jsonify({"message": "Car deleted successfully"}), 200
@@ -113,6 +147,7 @@ def remove_car(car_id) -> Response:
 
 @car_bp.route("/transmissions", methods=["GET"])
 def get_transmissions() -> Response:
+    """Retrieves all available transmission types."""
     try:
         transmissions = CarService.get_transmission_types()
         transmissions_data = [TransmissionTypeDTO.model_validate(t).model_dump() for t in transmissions]
@@ -122,6 +157,7 @@ def get_transmissions() -> Response:
 
 @car_bp.route("/drives", methods=["GET"])
 def get_drives() -> Response:
+    """Retrieves all available drive types."""
     try:
         drives = CarService.get_drive_types()
         drives_data = [DriveTypeDTO.model_validate(d).model_dump() for d in drives]
@@ -131,6 +167,7 @@ def get_drives() -> Response:
 
 @car_bp.route("/bodies", methods=["GET"])
 def get_bodies() -> Response:
+    """Retrieves all available body types."""
     try:
         body_types = CarService.get_body_types()
         body_types_data = [BodyTypeDTO.model_validate(b).model_dump() for b in body_types]
@@ -140,6 +177,7 @@ def get_bodies() -> Response:
 
 @car_bp.route("/engines", methods=["GET"])
 def get_engines() -> Response:
+    """Retrieves all available engine types."""
     try:
         engine_types = CarService.get_engine_types()
         engine_types_data = [EngineTypeDTO.model_validate(e).model_dump() for e in engine_types]
@@ -149,6 +187,7 @@ def get_engines() -> Response:
 
 @car_bp.route("/models", methods=["GET"])
 def get_models() -> Response:
+    """Retrieves all car models."""
     try:
         models = CarService.get_models()
         models_data = [CarModelDTO.model_validate(m).model_dump() for m in models]
@@ -158,6 +197,7 @@ def get_models() -> Response:
 
 @car_bp.route("/owners", methods=["GET"])
 def get_owners() -> Response:
+    """Retrieves all car owners."""
     try:
         owners = CarService.get_owners()
         owners_data = [UserDTO.model_validate(o).model_dump() for o in owners]

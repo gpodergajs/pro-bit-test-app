@@ -14,7 +14,10 @@ jwt = JWTManager()
 
 def create_app():
     """
-    An application factory, which creates and configures the app.
+    An application factory, which creates and configures the Flask application.
+
+    Returns:
+        Flask: The configured Flask application instance.
     """
     app = Flask(__name__)
     CORS(app)  # Enable CORS for all routes

@@ -6,4 +6,5 @@ class EngineType(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)  # Petrol, Diesel, Electric, Hybrid
 
     def __repr__(self):
-        return f"<EngineType(type={self.type})>"
+        """Returns a string representation of the EngineType object."""
+        return f"<EngineType(name={self.name})>"

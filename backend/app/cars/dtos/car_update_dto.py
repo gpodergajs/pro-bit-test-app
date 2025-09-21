@@ -2,6 +2,7 @@ from typing import Optional, Annotated
 from pydantic import BaseModel, Field
 
 class CarUpdateDTO(BaseModel):
+    """DTO for updating an existing car's information."""
     vin: Optional[Annotated[str, Field(max_length=50)]] = None
     license_plate: Optional[Annotated[str, Field(max_length=20)]] = None
     model_id: Optional[int] = None

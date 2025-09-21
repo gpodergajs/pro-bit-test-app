@@ -8,4 +8,5 @@ class CarBrand(db.Model):
     models = db.relationship("CarModel", back_populates="brand", lazy="joined")
 
     def __repr__(self):
+        """Returns a string representation of the CarBrand object."""
         return f"<CarBrand(name={self.name})>"

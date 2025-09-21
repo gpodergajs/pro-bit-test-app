@@ -5,6 +5,14 @@ users_bp = Blueprint("users", __name__)
 
 @users_bp.route("/register", methods=["POST"])
 def register() -> Response:
+    """
+    Registers a new user via API.
+
+    Request Body:
+        username (str): The desired username.
+        email (str): The user's email address.
+        password (str): The user's password.
+    """
     data = request.get_json()
     try:
         user = UserService.register(
@@ -20,6 +28,13 @@ def register() -> Response:
 
 @users_bp.route("/login", methods=["POST"])
 def login() -> Response:
+    """
+    Authenticates a user and returns an access token via API.
+
+    Request Body:
+        username (str): The user's username.
+        password (str): The user's password.
+    """
     data = request.get_json()
     try:
         access_token = UserService.login(

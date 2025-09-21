@@ -31,6 +31,7 @@ class Car(db.Model):
     drive_type = db.relationship("DriveType", lazy="joined")
 
     def __repr__(self):
+        """Returns a string representation of the Car object."""
         model_name = self.model.name if self.model else "Unknown"
         owner_name = self.owner.username if self.owner else "Unknown"
         return f"<Car(VIN={self.vin}, model={model_name}, owner={owner_name})>"

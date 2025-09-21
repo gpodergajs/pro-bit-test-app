@@ -14,9 +14,23 @@ class InvalidCredentialsException(Exception):
 class UserService:
     @staticmethod
     def register(username: str, email: str, password: str) -> User:
+        """
+        Registers a new user.
+
+        Args:
+            username (str): The desired username.
+            email (str): The user's email address.
+            password (str): The user's plain-text password.
+
+        Returns:
+            User: The newly created User object.
+
+        Raises:
+            UserAlreadyExistsException: If a user with the given username already exists.
+            Exception: For other registration failures.
+        """
         logger.info(f"Attempting to register user: {username}")
         try:
-            # Check if user already exists
             if UserRepository.get_user_by_username(username):
                 raise UserAlreadyExistsException(f"User with username {username} already exists")
 
@@ -32,6 +46,20 @@ class UserService:
 
     @staticmethod
     def login(username: str, password: str) -> str:
+        """
+        Authenticates a user and returns an access token.
+
+        Args:
+            username (str): The user's username.
+            password (str): The user's plain-text password.
+
+        Returns:
+            str: An access token if authentication is successful.
+
+        Raises:
+            InvalidCredentialsException: If the username or password is incorrect.
+            Exception: For other login failures.
+        """
         logger.info(f"Attempting to log in user: {username}")
         try:
             user = UserRepository.get_user_by_username(username)

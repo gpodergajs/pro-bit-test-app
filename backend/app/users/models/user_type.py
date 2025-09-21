@@ -8,4 +8,5 @@ class UserType(db.Model):
     users = db.relationship("User", back_populates="user_type", lazy="joined")
 
     def __repr__(self):
+        """Returns a string representation of the UserType object."""
         return f"<UserType(name={self.name})>"

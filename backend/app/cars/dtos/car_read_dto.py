@@ -8,6 +8,7 @@ from .transmission_type_dto import TransmissionTypeDTO
 from .drive_type_dto import DriveTypeDTO
 
 class CarReadDTO(BaseModel):
+    """DTO for reading car information, including related models and owner details."""
     id: int
     vin: str
     license_plate: str

@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv() # Load environment variables from .env file for local development
 
 class Config:
+    """Application configuration class."""
     DB_TYPE = os.environ.get('DB_TYPE', 'mysql') # 'mysql' or 'mssql'
     DB_USER = os.environ.get('DB_USER')
     DB_PASSWORD = os.environ.get('DB_PASSWORD')

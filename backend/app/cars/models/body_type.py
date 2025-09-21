@@ -6,4 +6,5 @@ class BodyType(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)  # Sedan, SUV, Hatchback
 
     def __repr__(self):
-        return f"<BodyType(type={self.type})>"
+        """Returns a string representation of the BodyType object."""
+        return f"<BodyType(name={self.name})>"

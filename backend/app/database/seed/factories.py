@@ -16,18 +16,23 @@ fake = Faker()
 
 # --- Functions to lazily load database choices ---
 def get_user_types():
+    """Retrieves all user types from the database."""
     return UserType.query.all()
 
 def get_engine_types():
+    """Retrieves all engine types from the database."""
     return EngineType.query.all()
 
 def get_transmission_types():
+    """Retrieves all transmission types from the database."""
     return TransmissionType.query.all()
 
 def get_drive_types():
+    """Retrieves all drive types from the database."""
     return DriveType.query.all()
 
 def get_body_types():
+    """Retrieves all body types from the database."""
     return BodyType.query.all()
 
 
@@ -50,6 +55,15 @@ class UserFactory(BaseFactory):
 
     @factory.post_generation
     def set_username(obj, create, extracted, **kwargs):
+        """
+        Sets the username and password for the created user based on their user type.
+
+        Args:
+            obj (User): The User object being created.
+            create (bool): True if the object is being created, False if built.
+            extracted (Any): Extracted value from the factory.
+            **kwargs: Additional keyword arguments.
+        """
         # Ensure the object has an ID
          if obj.id:
             if obj.user_type.id == UserTypeEnum.ADMIN.value:

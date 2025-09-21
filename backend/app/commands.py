@@ -15,7 +15,13 @@ from app.users.models import UserType
 @click.command(name="seed_db")
 @with_appcontext
 def seed_db():
-    """Seeds the database with fake Car data using Factory Boy."""
+    """
+    CLI command to seed the database with initial data.
+
+    This command creates default user types (Admin, User), various car-related lookup data
+    (BodyType, EngineType, TransmissionType, DriveType), and then generates
+    fake user and car data using Factory Boy.
+    """
     logger.info("Starting database seeding process.")
     if Car.query.first():
         logger.info("Database already seeded. Skipping.")
