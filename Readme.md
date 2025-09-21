@@ -9,8 +9,7 @@ All Docker and development tasks are managed via the `./run.sh` helper script.
 - [**Workflow 1: Hybrid Development (Recommended for Speed)**](#workflow-1-hybrid-development-recommended-for-speed)
   - [One-Time Setup](#one-time-setup)
   - [Daily Workflow](#daily-workflow)
-- [**Workflow 2: Fully-Containerized Development (for Consistency)**](#workflow-2-fully-containerized-development-for-consistency)
-  - [Daily Workflow](#daily-workflow-1)
+- [**Local Development: Fully Containerized (for Consistency and Debugging)**](#local-development-fully-containerized-for-consistency-and-debugging)
 - [Getting Help](#getting-help)
 
 ---
@@ -90,7 +89,7 @@ This starts the database container in the background.
 ```
 
 **Step 2: Run the Flask App**
-Activate your virtual environment and run the Flask server. For instructions, you can run `./run.sh local-help`.
+Activate your virtual environment and run the Flask server. Ensure your `backend/.env` file is configured correctly (e.g., `FLASK_APP=run.py`, `FLASK_DEBUG=1`).
 ```bash
 # Activate the virtual environment
 source venv/bin/activate
@@ -99,10 +98,25 @@ source venv/bin/activate
 cd backend
 
 # Run the Flask development server
-flask run```
+flask run
+```
 Your API is now running on `http://localhost:5000`.
 
-**Step 3: Manage the Database (Locally)**
+**Step 3: Run the Angular App**
+Open a **new terminal**, navigate to the `frontend` directory, install dependencies, and start the Angular development server.
+```bash
+# Navigate to the frontend folder
+cd frontend
+
+# Install dependencies (if not already done)
+npm install
+
+# Start the Angular development server
+ng serve --proxy-config proxy.conf.json
+```
+Your frontend will be accessible on `http://localhost:4200` (or another port if 4200 is in use).
+
+**Step 4: Manage the Database (Locally)**
 When you change a model, run these commands from the `backend/` directory (with your `venv` active).
 ```bash
 # Generate a new migration
@@ -115,7 +129,7 @@ flask db upgrade
 flask seed_db
 ```
 
-**Step 4: Stop the Database**
+**Step 5: Stop the Database**
 When you are done, stop the database container.
 ```bash
 ./run.sh stop-db
@@ -124,14 +138,13 @@ To completely reset the database, run `./run.sh reset-db`.
 
 ---
 
-## Workflow 2: Fully-Containerized Development (for Consistency)
-**Use this to guarantee your code runs in an identical environment to your teammates and CI/CD pipelines.** All commands are run via the script, which executes them inside the Docker container.
+## Local Development: Fully Containerized (for Consistency and Debugging)
+**Use this to guarantee your code runs in an identical environment to your teammates and CI/CD pipelines, with integrated debugging.**
 
-### Running with Nginx and Frontend Build
-This setup uses Nginx to serve the frontend and proxy requests to the backend. The frontend is automatically built as part of the Nginx Docker image.
+### One-Time Setup & Daily Workflow
 
 1.  **Build and Start All Services:**
-    This command builds the frontend, backend, and Nginx services, and starts them.
+    This command builds the frontend, backend, and Nginx services, and starts them. The frontend is automatically built as part of the Nginx Docker image.
     ```bash
     docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
     ```
@@ -143,36 +156,27 @@ This setup uses Nginx to serve the frontend and proxy requests to the backend. T
 3.  **Attach the Debugger (VS Code):**
     If you want to debug the backend, go to the "Run and Debug" view in VS Code (Ctrl+Shift+D), select the "Python: Attach to Docker" configuration, and click the "Start Debugging" button.
 
-### Daily Workflow
-**Step 1: Start All Containers**
-This builds and starts all services, including the backend.
-```bash
-./run.sh dev
-```
-The backend will pause and wait for a debugger to attach. You can connect VS Code now or just proceed to the next steps.
+4.  **Manage the Database (via Script):**
+    When you change a model, open a **new terminal** and use the `run.sh` script.
+    ```bash
+    # Generate a new migration script
+    ./run.sh migrate "A descriptive message about the change"
 
-**Step 2: Manage the Database (via Script)**
-When you change a model, open a **new terminal** and use the `run.sh` script.
+    # Apply the migration to the database
+    ./run.sh upgrade
+    ```
 
-```bash
-# Generate a new migration script
-./run.sh migrate "A descriptive message about the change"
+5.  **Seed the Database:**
+    To populate the database with initial data, run:
+    ```bash
+    ./run.sh seed
+    ```
 
-# Apply the migration to the database
-./run.sh upgrade
-```
-
-**Step 3: Seed the Database**
-To populate the database with initial data, run:
-```bash
-./run.sh seed
-```
-
-**Step 4: Stop Everything**
-This command stops and removes all containers related to this workflow.
-```bash
-./run.sh down
-```
+6.  **Stop Everything:**
+    This command stops and removes all containers related to this workflow.
+    ```bash
+    docker-compose down
+    ```
 
 ---
 
