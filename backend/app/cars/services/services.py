@@ -3,6 +3,9 @@ from app import db
 from ..models import Car, BodyType, DriveType, EngineType, TransmissionType, CarModel
 from ..dtos import CarCreateDTO, CarUpdateDTO
 from app.users.models import User
+from app.common.logger import get_logger
+
+logger = get_logger(__name__)
 
 class CarService:
     
@@ -64,41 +67,51 @@ class CarService:
         """
         car = Car.query.get(car_id)
         if not car:
+            logger.warning(f"Car with ID {car_id} not found for deletion.")
             return {"error": "Car not found"}, 404
 
         try:
             db.session.delete(car)
             db.session.commit()
+            logger.info(f"Car with ID {car_id} deleted successfully.")
             return {"message": "Car deleted"}, 200
         except Exception as e:
             db.session.rollback()
+            logger.error(f"Error deleting car with ID {car_id}: {e}")
             return {"error": str(e)}, 500
 
     @staticmethod
     def create_car(dto: CarCreateDTO):
+        logger.info(f"Attempting to create car with data: {dto.model_dump()}")
         try:
             car = Car(**dto.model_dump())  # unpack DTO into Car ORM
             db.session.add(car)
             db.session.commit()
+            logger.info(f"Car created successfully with ID: {car.id}")
             return car, 201
         except Exception as e:
             db.session.rollback()
+            logger.error(f"Error creating car: {e}")
             return {"error": str(e)}, 500
 
     @staticmethod
     def update_car(car_id: int, dto: CarUpdateDTO):
         car = Car.query.get(car_id)
         if not car:
+            logger.warning(f"Car with ID {car_id} not found for update.")
             return {"error": "Car not found"}, 404
 
+        logger.info(f"Attempting to update car with ID {car_id} with data: {dto.model_dump(exclude_unset=True)}")
         try:
             for key, value in dto.model_dump(exclude_unset=True).items():
                 setattr(car, key, value)  # update only provided fields
 
             db.session.commit()
+            logger.info(f"Car with ID {car_id} updated successfully.")
             return car, 200
         except Exception as e:
             db.session.rollback()
+            logger.error(f"Error updating car with ID {car_id}: {e}")
             return {"error": str(e)}, 500
 
     @staticmethod
