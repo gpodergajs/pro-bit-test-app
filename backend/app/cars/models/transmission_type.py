@@ -1,0 +1,10 @@
+from app import db
+
+class TransmissionType(db.Model):
+    __tablename__ = 'transmission_types'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=True, nullable=False)  # Automatic, Manual, CVT
+
+    def __repr__(self):
+        """Returns a string representation of the TransmissionType object."""
+        return f"<TransmissionType(name={self.name})>"

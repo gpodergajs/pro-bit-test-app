@@ -13,7 +13,7 @@ export class LoginService {
   private messageService = inject(MessageService);
   private authService = inject(AuthService);
 
-  private readonly apiUrl = '/api/auth';
+  private readonly apiUrl = '/api/users';
 
   /**
    * Logs in the user
