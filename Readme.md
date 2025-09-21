@@ -102,6 +102,8 @@ flask run
 ```
 Your API is now running on `http://localhost:5000`.
 
+**Note:** In this Hybrid Development workflow, the Angular frontend is *not* automatically built or served. You will run the Angular development server (`ng serve`) directly on your machine, which provides features like live-reloading.
+
 **Step 3: Run the Angular App**
 Open a **new terminal**, navigate to the `frontend` directory, install dependencies, and start the Angular development server.
 ```bash
