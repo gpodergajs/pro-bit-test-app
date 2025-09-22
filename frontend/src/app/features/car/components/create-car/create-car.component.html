@@ -85,7 +85,7 @@
           <mat-label>Doors</mat-label>
           <input matInput type="number" formControlName="doors" />
           <mat-error *ngIf="carForm.get('doors')?.hasError('required')">Number of doors is required.</mat-error>
-          <mat-error *ngIf="carForm.get('doors')?.hasError('min')">Doors must be greater than 0.</mat-error>
+          <mat-error *ngIf="carForm.get('doors')?.hasError('min')">Doors must be greater than 2.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -134,7 +134,7 @@
 
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="saveCar()" [disabled]="carForm.invalid">Create Car</button>
-      <button mat-raised-button color="warn" routerLink="/cars">Cancel</button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
     </mat-card-actions>
   </mat-card>
 </div>

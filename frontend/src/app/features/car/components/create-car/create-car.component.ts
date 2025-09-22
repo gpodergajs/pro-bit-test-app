@@ -64,7 +64,7 @@ export class CreateCarComponent implements OnInit {
       owner: [null, Validators.required],
       color: ['', Validators.required],
       mileage: [0, [Validators.required, Validators.min(1)]],
-      doors: [0, [Validators.required, Validators.min(1)]],
+      doors: [0, [Validators.required, Validators.min(2)]],
       engine_capacity: [0, [Validators.required, Validators.min(0.1)]],
       fuel_consumption: [0, [Validators.required, Validators.min(0.1)]],
       license_plate: ['', Validators.required],
@@ -139,4 +139,10 @@ export class CreateCarComponent implements OnInit {
       }
     });
   }
+
+  onCancel(){
+    this.router.navigate(['/cars']);
+  }
+
+
 }
