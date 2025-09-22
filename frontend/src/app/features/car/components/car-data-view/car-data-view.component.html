@@ -4,17 +4,17 @@
       <mat-card class="car-card" appearance="outlined" (click)="goToDetails(car.id)"  >
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>{{ car.model.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
-          <mat-card-subtitle>{{ car.body_type.name }} | {{ car.color }}</mat-card-subtitle>
+          <mat-card-title>{{ car.model?.name }} — {{ car.price | currency:'USD' }}</mat-card-title>
+          <mat-card-subtitle>{{ car.body_type?.name }} | {{ car.color }}</mat-card-subtitle>
         </mat-card-header>
 
-        <img mat-card-image class="car-image" src="https://www.tms.si/wp-content/uploads/2020/12/141492.jpg" [alt]="car.model.name">
+        <img mat-card-image class="car-image" src="https://www.tms.si/wp-content/uploads/2020/12/141492.jpg" [alt]="car.model?.name">
 
         <mat-card-content>
           <p><strong>Mileage:</strong> {{ car.mileage | number }} km</p>
           <p><strong>Doors:</strong> {{ car.doors }}</p>
-          <p><strong>Engine:</strong> {{ car.engine_capacity }}L {{ car.engine_type.name }}</p>
-          <p><strong>Transmission:</strong> {{ car.transmission_type.name }}</p>
+          <p><strong>Engine:</strong> {{ car.engine_capacity }}L {{ car.engine_type?.name }}</p>
+          <p><strong>Transmission:</strong> {{ car.transmission_type?.name }}</p>
           <p><strong>Year:</strong> {{ car.registration_year }}</p>
         </mat-card-content>
 

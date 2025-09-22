@@ -118,7 +118,8 @@ export class CarListPageComponent implements OnInit {
     this.loading = true;
     this.carApi.getCars(this.pageIndex + 1, this.pageSize, this.filterForm.value).pipe(
       map(response => {
-        this.totalCars = response.total_items; // Update totalCars for paginator
+        this.totalCars = response.total_items;
+        console.log(response.cars)
         return response.cars;
       }),
       catchError((err: HttpErrorResponse) => {
