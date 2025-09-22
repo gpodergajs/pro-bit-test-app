@@ -18,6 +18,7 @@ import { PaginatorComponent } from '../../../../shared/components/paginator/pagi
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { MessageService } from '../../../../core/services/message.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-car-list-page',
@@ -41,8 +42,9 @@ import { Router } from '@angular/router';
 export class CarListPageComponent implements OnInit {
   private carApi = inject(CarApiService);
   private fb = inject(FormBuilder);
-  private router = inject(Router)
+  private router = inject(Router);
   private messageService = inject(MessageService);
+  private authService = inject(AuthService);
 
   private carsSubject = new BehaviorSubject<Car[]>([]);
   cars$ = this.carsSubject.asObservable();
@@ -116,7 +118,8 @@ export class CarListPageComponent implements OnInit {
     this.loading = true;
     this.carApi.getCars(this.pageIndex + 1, this.pageSize, this.filterForm.value).pipe(
       map(response => {
-        this.totalCars = response.total_items; // Update totalCars for paginator
+        this.totalCars = response.total_items;
+        console.log(response.cars)
         return response.cars;
       }),
       catchError((err: HttpErrorResponse) => {
@@ -172,6 +175,10 @@ export class CarListPageComponent implements OnInit {
 
   onCreateCar() {
     this.router.navigate(['/cars/create']);
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
 }

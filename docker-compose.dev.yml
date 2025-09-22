@@ -1,26 +1,10 @@
-# /docker-compose.dev.yml
 version: '3.8'
 
 services:
   backend:
-    # Point to our new development Dockerfile
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
     ports:
-      - "5000:5000"  # Flask app port
-      - "5678:5678"  # Debugger port
-    environment:
-      - FLASK_APP=app:create_app
-      - FLASK_DEBUG=1 # Enables auto-reload
-
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./frontend/dist/frontend/browser:/usr/share/nginx/html
-    depends_on:
-      - backend
+      - "5678:5678"
+    command: ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "flask", "run", "--host=0.0.0.0", "--no-debugger"]

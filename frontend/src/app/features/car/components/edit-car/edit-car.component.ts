@@ -3,7 +3,7 @@ import { HasId, DropdownData, Car } from '../../../../shared/interfaces/common.i
 import { CarApiService } from '../../services/car-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,12 +17,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 import { MessageService } from '../../../../core/services/message.service';
 
-
 @Component({
   selector: 'app-edit-car',
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -34,25 +34,46 @@ import { MessageService } from '../../../../core/services/message.service';
   ],
   standalone: true,
   templateUrl: './edit-car.component.html',
-  styleUrl: './edit-car.component.scss'
+  styleUrls: ['./edit-car.component.scss']
 })
 export class EditCarComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private carApi = inject(CarApiService);
   private router = inject(Router);
   private messageService = inject(MessageService);
+  private fb = inject(FormBuilder);
 
   car!: Car;
+  carForm!: FormGroup;
 
   models: { id: number; name: string }[] = [];
   bodyTypes: { id: number; name: string }[] = [];
   transmissionTypes: { id: number; name: string }[] = [];
   driveTypes: { id: number; name: string }[] = [];
+  engineTypes: { id: number; name: string }[] = [];
   owners: { id: number; username: string }[] = [];
   colors: string[] = ['Red', 'Blue', 'Black', 'White', 'Silver', 'Green'];
   saving = false;
 
   ngOnInit(): void {
+    this.carForm = this.fb.group({
+      model: [null, Validators.required],
+      body_type: [null, Validators.required],
+      transmission_type: [null, Validators.required],
+      drive_type: [null, Validators.required],
+      engine_type: [null, Validators.required],
+      owner: [null, Validators.required],
+      color: ['', Validators.required],
+      mileage: [0, [Validators.required, Validators.min(1)]],
+      doors: [0, [Validators.required, Validators.min(1)]],
+      engine_capacity: [0, [Validators.required, Validators.min(0.1)]],
+      fuel_consumption: [0, [Validators.required, Validators.min(0.1)]],
+      license_plate: ['', Validators.required],
+      vin: ['', Validators.required],
+      registration_year: [new Date().getFullYear(), [Validators.required, Validators.min(1900)]],
+      price: [0, [Validators.required, Validators.min(1)]]
+    });
+
     const carId = Number(this.route.snapshot.paramMap.get('id'));
     if (carId) {
       this.loadDropdownsAndCar(carId);
@@ -83,6 +104,10 @@ export class EditCarComponent implements OnInit {
         this.messageService.showError(error);
         return of([]);
       })),
+      engineTypes: this.carApi.getEngineTypes().pipe(catchError((error: HttpErrorResponse) => {
+        this.messageService.showError(error);
+        return of([]);
+      })),
       owners: this.carApi.getOwners().pipe(catchError((error: HttpErrorResponse) => {
         this.messageService.showError(error);
         return of([]);
@@ -95,6 +120,7 @@ export class EditCarComponent implements OnInit {
           ? res.transmissionTypes
           : res.transmissionTypes?.transmission_types ?? [];
         this.driveTypes = Array.isArray(res.driveTypes) ? res.driveTypes : res.driveTypes?.drive_types ?? [];
+        this.engineTypes = Array.isArray(res.engineTypes) ? res.engineTypes : res.engineTypes?.engine_types ?? [];
         this.owners = Array.isArray(res.owners) ? res.owners : res.owners?.owners ?? [];
 
         this.loadCar(carId);
@@ -105,19 +131,25 @@ export class EditCarComponent implements OnInit {
 
   loadCar(carId: number) {
     this.carApi.getCarById(carId).subscribe({
-      next: (car) => this.car = car,
+      next: (car) => {
+        this.car = car;
+        this.carForm.patchValue(car);
+      },
       error: (err) => this.messageService.showError(err)
     });
   }
 
- saveCar() {
-    if (!this.car) return;
+  saveCar() {
+    if (this.carForm.invalid) {
+      this.messageService.showError('Please fill in all required fields.');
+      return;
+    }
     this.saving = true;
-    this.carApi.updateCar(this.car.id, this.car).subscribe({
+    this.carApi.updateCar(this.car.id, this.carForm.value).subscribe({
       next: () => {
         this.saving = false;
         this.messageService.showSuccess('Car saved successfully!');
-        this.router.navigate(['/cars']); 
+        this.router.navigate(['/cars']);
       },
       error: (err) => {
         this.saving = false;

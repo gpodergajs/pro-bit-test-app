@@ -3,104 +3,138 @@
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>Create New Car</mat-card-title>
-      <!-- Removed subtitle -->
     </mat-card-header>
 
-    <img mat-card-image [src]="'https://www.tms.si/wp-content/uploads/2020/12/141492.jpg'" [alt]="car.model.name" class="main-car-image">
+    <img mat-card-image [src]="'https://www.tms.si/wp-content/uploads/2020/12/141492.jpg'" alt="Car image" class="main-car-image">
 
-    <mat-card-content>
+    <mat-card-content [formGroup]="carForm">
       <div class="specs-grid">
 
         <!-- Model -->
         <mat-form-field appearance="outline">
           <mat-label>Model</mat-label>
-          <mat-select [(ngModel)]="car.model" [compareWith]="compareById">
+          <mat-select formControlName="model" [compareWith]="compareById">
             <mat-option *ngFor="let m of models" [value]="m">{{ m.name }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="carForm.get('model')?.hasError('required')">Model is required.</mat-error>
         </mat-form-field>
 
         <!-- Body Type -->
         <mat-form-field appearance="outline">
           <mat-label>Body Type</mat-label>
-          <mat-select [(ngModel)]="car.body_type" [compareWith]="compareById">
+          <mat-select formControlName="body_type" [compareWith]="compareById">
             <mat-option *ngFor="let b of bodyTypes" [value]="b">{{ b.name }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="carForm.get('body_type')?.hasError('required')">Body Type is required.</mat-error>
         </mat-form-field>
 
         <!-- Transmission -->
         <mat-form-field appearance="outline">
           <mat-label>Transmission</mat-label>
-          <mat-select [(ngModel)]="car.transmission_type" [compareWith]="compareById">
+          <mat-select formControlName="transmission_type" [compareWith]="compareById">
             <mat-option *ngFor="let t of transmissionTypes" [value]="t">{{ t.name }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="carForm.get('transmission_type')?.hasError('required')">Transmission is required.</mat-error>
         </mat-form-field>
 
         <!-- Drive Type -->
         <mat-form-field appearance="outline">
           <mat-label>Drive Type</mat-label>
-          <mat-select [(ngModel)]="car.drive_type" [compareWith]="compareById">
+          <mat-select formControlName="drive_type" [compareWith]="compareById">
             <mat-option *ngFor="let d of driveTypes" [value]="d">{{ d.name }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="carForm.get('drive_type')?.hasError('required')">Drive Type is required.</mat-error>
+        </mat-form-field>
+
+        <!-- Engine Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Engine Type</mat-label>
+          <mat-select formControlName="engine_type" [compareWith]="compareById">
+            <mat-option *ngFor="let e of engineTypes" [value]="e">{{ e.name }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="carForm.get('engine_type')?.hasError('required')">Engine Type is required.</mat-error>
         </mat-form-field>
 
         <!-- Owner -->
         <mat-form-field appearance="outline">
           <mat-label>Owner</mat-label>
-          <mat-select [(ngModel)]="car.owner" [compareWith]="compareById">
+          <mat-select formControlName="owner" [compareWith]="compareById">
             <mat-option *ngFor="let o of owners" [value]="o">{{ o.username }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="carForm.get('owner')?.hasError('required')">Owner is required.</mat-error>
         </mat-form-field>
 
         <!-- Color -->
         <mat-form-field appearance="outline">
           <mat-label>Color</mat-label>
-          <mat-select [(ngModel)]="car.color">
+          <mat-select formControlName="color">
             <mat-option *ngFor="let c of colors" [value]="c">{{ c }}</mat-option>
           </mat-select>
+          <mat-error *ngIf="carForm.get('color')?.hasError('required')">Color is required.</mat-error>
         </mat-form-field>
 
         <!-- Numeric & Text Inputs -->
         <mat-form-field appearance="outline">
           <mat-label>Mileage</mat-label>
-          <input matInput type="number" [(ngModel)]="car.mileage" />
+          <input matInput type="number" formControlName="mileage" />
+          <mat-error *ngIf="carForm.get('mileage')?.hasError('required')">Mileage is required.</mat-error>
+          <mat-error *ngIf="carForm.get('mileage')?.hasError('min')">Mileage must be greater than 0.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Doors</mat-label>
-          <input matInput type="number" [(ngModel)]="car.doors" />
+          <input matInput type="number" formControlName="doors" />
+          <mat-error *ngIf="carForm.get('doors')?.hasError('required')">Number of doors is required.</mat-error>
+          <mat-error *ngIf="carForm.get('doors')?.hasError('min')">Doors must be greater than 2.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Engine Capacity</mat-label>
-          <input matInput type="number" step="0.1" [(ngModel)]="car.engine_capacity" />
+          <input matInput type="number" step="0.1" formControlName="engine_capacity" />
+          <mat-error *ngIf="carForm.get('engine_capacity')?.hasError('required')">Engine capacity is required.</mat-error>
+          <mat-error *ngIf="carForm.get('engine_capacity')?.hasError('min')">Engine capacity must be greater than 0.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Fuel Consumption</mat-label>
-          <input matInput type="number" step="0.1" [(ngModel)]="car.fuel_consumption" />
+          <input matInput type="number" step="0.1" formControlName="fuel_consumption" />
+          <mat-error *ngIf="carForm.get('fuel_consumption')?.hasError('required')">Fuel consumption is required.</mat-error>
+          <mat-error *ngIf="carForm.get('fuel_consumption')?.hasError('min')">Fuel consumption must be greater than 0.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>License Plate</mat-label>
-          <input matInput [(ngModel)]="car.license_plate" />
+          <input matInput formControlName="license_plate" />
+          <mat-error *ngIf="carForm.get('license_plate')?.hasError('required')">License plate is required.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>VIN</mat-label>
-          <input matInput [(ngModel)]="car.vin" />
+          <input matInput formControlName="vin" />
+          <mat-error *ngIf="carForm.get('vin')?.hasError('required')">VIN is required.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Year</mat-label>
-          <input matInput type="number" [(ngModel)]="car.registration_year" />
+          <input matInput type="number" formControlName="registration_year" />
+          <mat-error *ngIf="carForm.get('registration_year')?.hasError('required')">Year is required.</mat-error>
+          <mat-error *ngIf="carForm.get('registration_year')?.hasError('min')">Year must be valid.</mat-error>
         </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Price</mat-label>
+          <input matInput type="number" formControlName="price" />
+          <mat-error *ngIf="carForm.get('price')?.hasError('required')">Price is required.</mat-error>
+          <mat-error *ngIf="carForm.get('price')?.hasError('min')">Price must be greater than 0.</mat-error>
+        </mat-form-field>
+        
         <app-progress-bar *ngIf="saving" mode="indeterminate" color="primary"></app-progress-bar>
       </div>
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="saveCar()">Create Car</button>
-      <button mat-raised-button color="warn" routerLink="/cars">Cancel</button>
+      <button mat-raised-button color="primary" (click)="saveCar()" [disabled]="carForm.invalid">Create Car</button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
     </mat-card-actions>
   </mat-card>
 </div>

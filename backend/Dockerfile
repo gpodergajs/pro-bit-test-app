@@ -1,5 +1,3 @@
-# /backend/Dockerfile
-
 # Stage 1: Use the official Python image
 FROM python:3.9-slim
 
@@ -17,5 +15,4 @@ COPY . .
 EXPOSE 5000
 
 # Stage 6: Command to run the application using Gunicorn
-# This is more robust for production than Flask's built-in server.
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--reload", "wsgi:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
