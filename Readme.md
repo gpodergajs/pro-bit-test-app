@@ -97,6 +97,9 @@ source venv/bin/activate
 # Navigate to the backend folder
 cd backend
 
+# Seed the database (run once or after migrations)
+flask seed_db
+
 # Run the Flask development server
 flask run
 ```
@@ -153,7 +156,7 @@ To completely reset the database, run `./run.sh reset-db`.
 ### One-Time Setup & Daily Workflow
 
 1.  **Build and Start All Services:**
-    This command builds the frontend, backend, and Nginx services, and starts them. The frontend is automatically built as part of the Nginx Docker image.
+    This command builds the backend (with debugging enabled via `Dockerfile.dev`) and Nginx services, and starts them. The frontend Angular application is built as part of the Nginx Docker image.
     ```bash
     docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
     ```
